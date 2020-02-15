@@ -42,14 +42,7 @@
           <el-button @click="switchMenu"></el-button>
         </el-header>
         <el-main>
-          <el-table :data="tableData">
-            <el-table-column prop="date" label="日期" width="140">
-            </el-table-column>
-            <el-table-column prop="name" label="姓名" width="120">
-            </el-table-column>
-            <el-table-column prop="address" label="地址">
-            </el-table-column>
-          </el-table>
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
@@ -94,14 +87,16 @@ export default {
   }
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
-    /*height: 100%;*/
-    /*min-height: 100vh;*/
   }
 
   .el-container {
     height: 100vh;
     margin: 0;
     padding: 0;
+  }
+
+  .el-aside {
+    min-height: 100vh;
   }
 
   .el-header {
