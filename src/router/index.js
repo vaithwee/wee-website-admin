@@ -4,13 +4,16 @@ import Vue from 'vue'
 Vue.use(VueRouter);
 
 const BlogArticle = () => import('@/views/blog/BlogArticle');
+const BlogEdit = () => import('@/views/blog/BlogEdit');
+const BlogCategory = () => import('@/views/blog/BlogCategory');
 const Blog = () => import('@/views/blog/Blog');
+const Home = () => import('@/views/home/Home');
 const Test = () => import('@/views/Test');
 
 let routes = [
     {
         path: '/',
-        redirect: '/blog/article'
+        component: Home
     },
     {
         name: 'blog',
@@ -21,6 +24,16 @@ let routes = [
                 name:'博客 文章',
                 path: 'article',
                 component: BlogArticle
+            },
+            {
+                name: '博客 编辑',
+                path: 'edit',
+                component: BlogEdit
+            },
+            {
+                name: '博客 分类',
+                path: 'category',
+                component: BlogCategory
             }
         ]
     },

@@ -2,19 +2,19 @@
   <div id="app">
     <el-container >
       <el-aside width="auto">
-        <div class="logo" style="text-align: center">
+        <div class="logo" style="text-align: center" @click="$router.replace('/')">
 
         </div>
-        <el-menu default-active="1-1" class="el-menu-vertical-demo" :collapse="isCollapse">
+        <el-menu class="el-menu-vertical-demo" :collapse="isCollapse">
           <el-submenu index="0">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span slot="title">博客</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="1-1">文章</el-menu-item>
-              <el-menu-item index="1-2">选项2</el-menu-item>
-              <el-menu-item index="1-3">选项3</el-menu-item>
+              <el-menu-item index="1-1" @click="$router.replace('/blog/article')">文章</el-menu-item>
+              <el-menu-item index="1-2" @click="$router.replace('/blog/category')">分类</el-menu-item>
+              <el-menu-item index="1-3">标签</el-menu-item>
               <el-menu-item index="1-4">选项3</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
@@ -42,7 +42,9 @@
           <el-button @click="switchMenu"></el-button>
         </el-header>
         <el-main>
-          <router-view></router-view>
+          <keep-alive>
+            <router-view></router-view>
+          </keep-alive>
         </el-main>
       </el-container>
     </el-container>
