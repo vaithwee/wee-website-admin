@@ -45,26 +45,21 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                <el-button type="primary" @click="addCategoryWithName">确 定</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
+    import {addCategory} from "@/network/category";
+
     export default {
         name: "BlogCategory",
         data() {
             return {
                 form: {
                     name: '',
-                    region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
                 },
                 formLabelWidth: '120px',
                 dialogFormVisible: false,
@@ -124,6 +119,14 @@
         },
         mounted() {
             this.maxHeight = this.$refs.table.offsetHeight - this.$refs.toolbar.offsetHeight;
+        },
+        methods: {
+            addCategoryWithName() {
+                this.dialogFormVisible = false;
+                addCategory(this.form.name).then(res => {
+                    console.log(res);
+                });
+            }
         }
     }
 </script>
