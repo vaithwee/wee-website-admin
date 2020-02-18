@@ -57,18 +57,7 @@
             </div>
         </el-dialog>
 
-        <el-dialog title="编辑分类" :visible.sync="createDialogFormVisible" center>
-            <el-form :model="form">
 
-                <el-form-item label="分类名称" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" autocomplete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="createDialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addCategoryWithName">确 定</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
