@@ -1,7 +1,7 @@
 import Axios from "axios";
 export function request(config) {
     const instance = Axios.create({
-        baseURL: 'http://api.vaith.xyz:8080',
+        baseURL: 'http://localhost:8080',
         timeout: 60000,
     });
     instance.interceptors.request.use(config => {

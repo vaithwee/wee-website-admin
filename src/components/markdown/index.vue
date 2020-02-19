@@ -12,7 +12,7 @@
     import defaultOptions from './default-option'
 
     export default {
-        name: 'MarddownEditor',
+        name: 'MarkdownEditor',
         props: {
             value: {
                 type: String,
@@ -38,7 +38,7 @@
             height: {
                 type: String,
                 required: false,
-                default: '300px'
+                default: '600px'
             },
             language: {
                 type: String,
@@ -67,6 +67,7 @@
                 }
             },
             language(val) {
+                console.log(val);
                 this.destroyEditor()
                 this.initEditor()
             },

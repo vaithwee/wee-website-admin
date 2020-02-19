@@ -16,6 +16,10 @@
                     <el-checkbox :label="t.name" :value="t.id" name="tags" v-for="t in tags" :key="t.id"></el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
+            <el-form-item label="内容">
+                <markdown-editer />
+            </el-form-item>
+
         </el-form>
     </div>
 </template>
@@ -24,6 +28,7 @@
     import {getCategoryList} from "@/network/category";
     import {getTagList} from "@/network/tag";
 
+    import MarkdownEditer from "@/components/markdown/index"
     export default {
         name: "BlogEdit",
         data() {
@@ -45,6 +50,9 @@
             getTagList(0, 200).then(res => {
                 this.tags = res.data;
             })
+        },
+        components: {
+            MarkdownEditer,
         }
     }
 </script>
