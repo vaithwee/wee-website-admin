@@ -15,7 +15,7 @@
               <el-menu-item index="1-1" @click="$router.replace('/blog/article')">文章</el-menu-item>
               <el-menu-item index="1-2" @click="$router.replace('/blog/category')">分类</el-menu-item>
               <el-menu-item index="1-3" @click="$router.replace('/blog/tag')">标签</el-menu-item>
-              <el-menu-item index="1-4">选项3</el-menu-item>
+              <el-menu-item index="1-4" @click="$router.replace('/blog/image')">图片</el-menu-item>
             </el-menu-item-group>
           </el-submenu>
         </el-menu>
