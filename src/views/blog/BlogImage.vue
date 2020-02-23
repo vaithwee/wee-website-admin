@@ -26,10 +26,18 @@
             </el-table-column>
 
             <el-table-column
+                    prop="originalName"
+                    label="名称"
+                    width="180">
+            </el-table-column>
+
+            <el-table-column
                     prop="name"
-                    label="文件名"
+                    label="自增名"
                     width="360">
             </el-table-column>
+
+
             <el-table-column
                     prop="key"
                     label="标识"
@@ -124,7 +132,7 @@
 
                 const file = this.$refs.fileInt.files[0];
                 console.log(file);
-                upload(file, '123123').then(res => {
+                upload(file, this.form.name).then(res => {
                     this.createDialogFormVisible = false;
                     if (res.result === true) {
                         this.list.push(res.data);
