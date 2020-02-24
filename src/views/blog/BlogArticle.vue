@@ -57,7 +57,7 @@
 </template>
 
 <script>
-    import {getArticleList} from "@/network/article";
+    import ArticleAPI from "@/network/article_api";
 
     export default {
         name: "BlogArticle",
@@ -68,7 +68,7 @@
             }
         },
         created() {
-            getArticleList(0, 20).then(res => {
+            ArticleAPI.getArticleList(0, 20).then(res => {
                console.log(res);
                this.list = res.data;
             });

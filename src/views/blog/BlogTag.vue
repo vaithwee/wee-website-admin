@@ -86,7 +86,7 @@
 </template>
 
 <script>
-    import {addTag, getTagList, removeTag} from "@/network/tag";
+    import TagAPI from "@/network/tag_api";
     import common from "@/network/common";
 
     export default {
@@ -110,14 +110,14 @@
             this.maxHeight = this.$refs.table.offsetHeight - this.$refs.toolbar.offsetHeight;
         },
         created() {
-            getTagList(this.page, this.size).then(res => {
+            TagAPI.getTagList(this.page, this.size).then(res => {
                this.list = res.data;
             });
         },
         methods: {
             addTag() {
                 this.createDialogFormVisible = false;
-                addTag(this.form.name, this.form.type, this.form.order).then(res => {
+                TagAPI.addTag(this.form.name, this.form.type, this.form.order).then(res => {
                     console.log(res);
                 });
             },
@@ -127,7 +127,7 @@
                     cancelButtonText: '取消',
                     type: 'warning',
                 }).then(() => {
-                    removeTag(id).then(res => {
+                    TagAPI.removeTag(id).then(res => {
                         if (res.result === true) {
                             this.list.splice(index, 1);
                         }

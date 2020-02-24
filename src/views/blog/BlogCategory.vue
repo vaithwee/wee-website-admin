@@ -62,7 +62,7 @@
 </template>
 
 <script>
-    import {addCategory, getCategoryList, removeCategoryById} from "@/network/category";
+    import CategoryAPI from "@/network/category_api";
     import common from "@/network/common";
 
     export default {
@@ -91,14 +91,14 @@
             initData() {
                 this.page = common.page;
                 this.size = common.size;
-                getCategoryList(this.page, this.size).then(res => {
+                CategoryAPI.getCategoryList(this.page, this.size).then(res => {
                     console.log(res);
                     this.list = res.data;
                 });
             },
             addCategoryWithName() {
                 this.createDialogFormVisible = false;
-                addCategory(this.form.name).then(res => {
+                CategoryAPI.addCategory(this.form.name).then(res => {
                     if (res.result === false) {
                         this.$alert(res.message, '提示', {
                             confirmButtonText: '确定',
@@ -113,7 +113,7 @@
                 });
             },
             deleteCategoryWithID(id, index) {
-                removeCategoryById(id).then(res => {
+                CategoryAPI.removeCategoryById(id).then(res => {
                    if (res.result === true) {
                        this.$notify({
                            title: '分类',

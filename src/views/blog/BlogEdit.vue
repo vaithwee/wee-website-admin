@@ -25,9 +25,9 @@
 </template>
 
 <script>
-    import {getCategoryList} from "@/network/category";
-    import {postArticle} from "@/network/article";
-    import {getTagList} from "@/network/tag";
+    import CategoryAPI from "@/network/category_api";
+    import ArticleAPI from "@/network/article_api";
+    import TagAPI from "@/network/tag_api";
 
     import MarkdownEditer from "@/components/markdown/index"
     export default {
@@ -45,11 +45,11 @@
             }
         },
         created() {
-            getCategoryList(0, 200).then(res => {
+            CategoryAPI.getCategoryList(0, 200).then(res => {
                 this.categories = res.data;
             });
 
-            getTagList(0, 200).then(res => {
+            TagAPI.getTagList(0, 200).then(res => {
                 this.tags = res.data;
             })
         },
@@ -61,7 +61,7 @@
                 this.form.content = conent;
             },
             postArticle() {
-                postArticle(this.form.title, this.form.content, this.form.tags, this.form.type).then(res => {
+               ArticleAPI.postArticle(this.form.title, this.form.content, this.form.tags, this.form.type).then(res => {
                     console.log(res);
                 })
             },
