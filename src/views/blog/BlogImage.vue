@@ -97,7 +97,7 @@
 </template>
 
 <script>
-    import {getImageList, upload} from "@/network/image";
+    import ImageAPI from "@/network/image_api";
     import common from "@/network/common";
 
 
@@ -119,7 +119,7 @@
             }
         },
         created() {
-            getImageList(this.page, this.size).then(res => {
+            ImageAPI.getImageList(this.page, this.size).then(res => {
                 console.log(res.data);
                 this.list = res.data;
             });
@@ -132,7 +132,7 @@
 
                 const file = this.$refs.fileInt.files[0];
                 console.log(file);
-                upload(file, this.form.name).then(res => {
+                ImageAPI.upload(file, this.form.name).then(res => {
                     this.createDialogFormVisible = false;
                     if (res.result === true) {
                         this.list.push(res.data);
