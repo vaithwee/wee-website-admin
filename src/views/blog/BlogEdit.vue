@@ -4,6 +4,29 @@
             <el-form-item label="标题" >
                 <el-input v-model="form.title" ></el-input>
             </el-form-item>
+            <el-form-item label="封面" >
+                <el-image v-if="form.cover != null" :src="form.cover.previewURL"></el-image>
+                <el-popover
+                        placement="right"
+                        width="320"
+
+                        trigger="click">
+                    <el-table :data="images"
+                              highlight-current-row
+                              @current-change="handleCurrentChange"
+                    >
+                        <el-table-column width="120" property="previewURL" label="日期" >
+                            <template slot-scope="scope">
+                                <el-image :src="scope.row.previewURL"></el-image>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="100" property="id" label="名称"></el-table-column>
+                        <el-table-column width="50" property="width" label="宽度"></el-table-column>
+                        <el-table-column width="50" property="heigth" label="高度"></el-table-column>
+                    </el-table>
+                    <el-button slot="reference">点击选取</el-button>
+                </el-popover>
+            </el-form-item>
             <el-form-item label="分类" >
                 <el-select v-model="form.type" placeholder="请选择分类" >
                     <el-option v-for="c in categories" :label="c.name" :value="c.id" :key="c.id">
@@ -28,6 +51,7 @@
     import CategoryAPI from "@/network/category_api";
     import ArticleAPI from "@/network/article_api";
     import TagAPI from "@/network/tag_api";
+    import ImageAPI from "@/network/image_api";
 
     import MarkdownEditer from "@/components/markdown/index"
     export default {
@@ -39,9 +63,11 @@
                     type: null,
                     tags:[],
                     content: null,
+                    cover:null
                 },
                 categories: [],
                 tags: [],
+                images: [],
             }
         },
         created() {
@@ -51,7 +77,11 @@
 
             TagAPI.getTagList(0, 200).then(res => {
                 this.tags = res.data;
-            })
+            });
+
+            ImageAPI.getImageList(0, 200).then(res => {
+                this.images = res.data;
+            });
         },
         components: {
             MarkdownEditer,
@@ -61,12 +91,15 @@
                 this.form.content = conent;
             },
             postArticle() {
-               ArticleAPI.postArticle(this.form.title, this.form.content, this.form.tags, this.form.type).then(res => {
+               ArticleAPI.postArticle(this.form.title, this.form.content, this.form.tags, this.form.type, this.form.cover.id).then(res => {
                     console.log(res);
                 })
             },
             tagsChanged(item) {
                 console.log(item);
+            },
+            handleCurrentChange(val) {
+                this.form.cover = val;
             }
         }
     }

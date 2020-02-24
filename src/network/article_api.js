@@ -1,14 +1,15 @@
 import {request} from "@/network/request";
 
 let ArticleAPI = {
-    postArticle: function(title, content, tags, categoryID) {
+    postArticle: function(title, content, tags, categoryID, coverID) {
         return request({
             url: '/article/add',
             data: {
                 title,
                 content,
                 tags,
-                categoryID
+                categoryID,
+                coverID
             },
             method: 'post'
         });
