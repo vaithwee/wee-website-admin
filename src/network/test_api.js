@@ -9,6 +9,10 @@ let TestApi = {
               "zw": "汉222字",
               "id": 98378277
           },
+          params: {
+              "page": 1,
+              "size": 20,
+          }
       })
   }
 };
