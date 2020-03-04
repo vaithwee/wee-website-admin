@@ -12,6 +12,9 @@
             TestApi.sec().then(res => {
                 console.log(res);
             });
+            TestApi.noen().then(res => {
+                console.log(res);
+            })
         }
     }
 </script>

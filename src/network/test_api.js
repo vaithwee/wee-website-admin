@@ -14,7 +14,13 @@ let TestApi = {
               "size": 20,
           }
       })
-  }
+  },
+    noen: function () {
+        return request({
+            url: "/test/noen",
+            method: 'get'
+        });
+    }
 };
 
 export default TestApi;
