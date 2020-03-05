@@ -27,11 +27,24 @@ export function request(config) {
   info = JSONUtil.sort(info);
   let infoSSign = SecurityUtil.encryptJsonToMD5(SecurityConfig.accessKey, info);
   let bodySign = "";
+  console.log(typeof config.data);
   if (config.data !== undefined) {
-    config.data = JSONUtil.sort(config.data);
-    bodySign = SecurityUtil.MD5(JSON.stringify(config.data));
+     let data = JSONUtil.sort(config.data);
+    bodySign = SecurityUtil.MD5(JSON.stringify(data));
+    if (config.isFile === undefined || config.isFile === false) {
+      config.data = data;
+    }
   }
   let secondSign = cryptoJS.MD5(infoSSign + bodySign).toString();
+
+  let headers = {
+    'info': JSON.stringify(info),
+    'sign': secondSign,
+  };
+
+  if (config.isFile === undefined || config.isFile === false) {
+    headers['Content-Type'] = 'application/json;charset=UTF-8';
+  }
 
 
   const instance = Axios.create({
@@ -46,12 +59,7 @@ export function request(config) {
       }
       return SecurityUtil.encryptJson(SecurityConfig.accessKey, data);
     }],
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-      'info': JSON.stringify(info),
-      'sign': secondSign,
-    },
-
+    headers,
   });
   instance.interceptors.request.use(config => {
     return config;

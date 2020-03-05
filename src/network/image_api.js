@@ -21,7 +21,8 @@ let ImageAPI = {
             data: data,
             transformRequest: [function (data) {
                 return data
-            }]
+            }],
+            isFile: true,
         });
     }
 };
