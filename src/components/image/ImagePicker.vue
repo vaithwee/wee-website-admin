@@ -17,7 +17,12 @@
         <el-button size="mini" type="text" @click="cancel">取消</el-button>
         <el-button type="primary" size="mini" @click="sure">确定</el-button>
       </div>
-      <el-button type="primary" slot="reference">更换</el-button>
+      <div slot="reference">
+        <slot>
+          <el-button type="primary">更换</el-button>
+        </slot>
+      </div>
+
     </el-popover>
   </div>
 </template>

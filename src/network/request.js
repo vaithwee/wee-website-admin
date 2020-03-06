@@ -7,7 +7,7 @@ import SecurityConfig from "../config/security_config";
 export function request(config) {
 
   let info = {
-    "en": 1,
+    "en": 0,
     "appid": 1,
     "timestamp": Date.parse(new Date()),
   };
