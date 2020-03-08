@@ -6,26 +6,12 @@
             </el-form-item>
             <el-form-item label="封面" >
                 <el-image v-if="form.cover != null" :src="form.cover.previewURL"></el-image>
-                <el-popover
-                        placement="right"
-                        width="320"
+                <image-picker @sure="toHandleImagePicker">
+                    <div slot="default">
+                        <el-button type="primary" size="mini">选取</el-button>
+                    </div>
+                </image-picker>
 
-                        trigger="click">
-                    <el-table :data="images"
-                              highlight-current-row
-                              @current-change="handleCurrentChange"
-                    >
-                        <el-table-column width="120" property="previewURL" label="日期" >
-                            <template slot-scope="scope">
-                                <el-image :src="scope.row.previewURL"></el-image>
-                            </template>
-                        </el-table-column>
-                        <el-table-column width="100" property="id" label="名称"></el-table-column>
-                        <el-table-column width="50" property="width" label="宽度"></el-table-column>
-                        <el-table-column width="50" property="heigth" label="高度"></el-table-column>
-                    </el-table>
-                    <el-button slot="reference">点击选取</el-button>
-                </el-popover>
             </el-form-item>
             <el-form-item label="分类" >
                 <el-select v-model="form.type" placeholder="请选择分类" >
@@ -40,7 +26,7 @@
                 </el-checkbox-group>
             </el-form-item>
             <el-form-item label="内容">
-                <markdown-editer @input="contentDidChanged" />
+                <markdown-pro ref="markdown" v-model="form.content"></markdown-pro>
             </el-form-item>
             <el-button type="primary" @click="postArticle">提交</el-button>
         </el-form>
@@ -53,7 +39,9 @@
     import TagAPI from "@/network/tag_api";
     import ImageAPI from "@/network/image_api";
 
-    import MarkdownEditer from "@/components/markdown/index"
+    import {MarkdownPro} from 'vue-meditor';
+    import ImagePicker from "@/components/image/ImagePicker";
+
     export default {
         name: "BlogEdit",
         data() {
@@ -62,7 +50,7 @@
                     title: '',
                     type: null,
                     tags:[],
-                    content: null,
+                    content: '',
                     cover:null
                 },
                 categories: [],
@@ -84,12 +72,10 @@
             });
         },
         components: {
-            MarkdownEditer,
+            ImagePicker,
+            MarkdownPro,
         },
         methods: {
-            contentDidChanged(conent) {
-                this.form.content = conent;
-            },
             postArticle() {
                ArticleAPI.postArticle(this.form.title, this.form.content, this.form.tags, this.form.type, this.form.cover.id).then(res => {
                     console.log(res);
@@ -98,9 +84,9 @@
             tagsChanged(item) {
                 console.log(item);
             },
-            handleCurrentChange(val) {
+            toHandleImagePicker(val) {
                 this.form.cover = val;
-            }
+            },
         }
     }
 </script>

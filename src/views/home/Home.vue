@@ -1,16 +1,20 @@
 <template>
   <div>
     <el-row :gutter="30">
-      <el-col :sm="24" :xm="24" :md="12" v-if="info">
+      <el-col :sm="24" :xm="24" :md="12">
         <el-card>
           <div slot="header">
-            <span>Home Info</span>
+            <span>首页信息</span>
             <el-button class="home-info-edit-button" type="text" :class="{'button-hidden':isHomeInfoEdit}"  @click="toOpenHomeInfoEdit">编辑</el-button>
           </div>
           <div>
             <el-form label-position="top" label-width="80px">
               <el-form-item label="封面">
-                <el-image :src="this.cover.originalURL" fit="cover" style="height: 200px"/>
+                <el-image :src="coverURL" fit="cover" style="height: 200px;width: 100%">
+                  <div slot="error" style="background-color: #f6f6f6;text-align: center">
+                    <h4 style="line-height: 200px">暂时未设置</h4>
+                  </div>
+                </el-image>
                 <image-picker @sure="toHandleImageSelected" :hidden="!isHomeInfoEdit">
                   <el-button size="mini" type="primary">选择</el-button>
                 </image-picker>
@@ -77,20 +81,29 @@
         if (this.homeInfoForm.cover === null) {
           this.homeInfoForm.cover = this.info.cover;
         }
-        HomeAPI.updateHomeInfo(this.homeInfoForm.id, this.homeInfoForm.cover.id, this.homeInfoForm.greeting).then(res => {
-          this.info = res.data;
-        });
+
+        if (this.info === null) {
+          HomeAPI.addInfo(this.homeInfoForm.greeting, this.homeInfoForm.cover.id).then(res => {
+            this.info = res.data;
+          });
+        } else  {
+          HomeAPI.updateHomeInfo(this.homeInfoForm.id, this.homeInfoForm.cover.id, this.homeInfoForm.greeting).then(res => {
+            this.info = res.data;
+          });
+        }
+
+
       },
       toHandleGreetingInput(value) {
         this.homeInfoForm.greeting = value;
       }
     },
     computed: {
-      cover() {
+      coverURL() {
         if (this.homeInfoForm.cover !== null) {
-          return this.homeInfoForm.cover;
-        } else if ( this.info.cover !== null) {
-          return this.info.cover;
+          return this.homeInfoForm.cover.originalURL;
+        } else if ( this.info !== null && this.info.cover !== null) {
+          return this.info.cover.originalURL;
         } else  {
           return null;
         }
@@ -98,8 +111,10 @@
       greeting() {
         if (this.isHomeInfoEdit) {
           return this.homeInfoForm.greeting;
-        } else  {
+        } else if (this.info !== null)  {
           return this.info.greeting;
+        } else  {
+          return '暂时未设置';
         }
       }
     }

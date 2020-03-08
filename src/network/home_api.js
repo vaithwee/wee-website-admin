@@ -6,6 +6,16 @@ let HomeAPI = {
       url: "/home/info",
     });
   },
+  addInfo: function(greeting, coverID) {
+    return request({
+      url: '/home/addInfo',
+      data: {
+        greeting,
+        coverID
+      },
+      method: 'post'
+    });
+  },
   updateHomeInfo: function (id, coverID, greeting) {
     return request({
       url: "/home/info/update",
