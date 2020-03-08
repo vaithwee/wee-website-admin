@@ -14,36 +14,37 @@ const Test = () => import('@/views/Test');
 
 let routes = [
     {
+        name: '首页',
         path: '/',
         component: Home
     },
     {
-        name: 'blog',
+        name: '博客',
         path: '/blog',
         component: Blog,
         children: [
             {
-                name:'博客 文章',
+                name:'文章',
                 path: 'article',
                 component: BlogArticle
             },
             {
-                name: '博客 编辑',
+                name: '编辑',
                 path: 'edit',
                 component: BlogEdit
             },
             {
-                name: '博客 分类',
+                name: '分类',
                 path: 'category',
                 component: BlogCategory
             },
             {
-                name: '博客 标签',
+                name: '标签',
                 path: 'tag',
                 component: BlogTag
             },
             {
-                name: '博客 图片',
+                name: '图片',
                 path: 'image',
                 component: BlogImage
             },

@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-row :gutter="30">
-      <el-col :sm="24" :xm="24" :md="12">
+      <el-col :sm="24" :xm="24" :md="12" :lg="8" :xl="8">
         <el-card>
           <div slot="header">
-            <span>首页信息</span>
+            <span>博客首页信息</span>
             <el-button class="home-info-edit-button" type="text" :class="{'button-hidden':isHomeInfoEdit}"  @click="toOpenHomeInfoEdit">编辑</el-button>
           </div>
           <div>
