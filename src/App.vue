@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-container>
+    <el-container v-if="isLogin">
       <el-aside width="auto" class="container-left">
         <div class="logo" style="text-align: center" @click="$router.replace('/')">
                     <span class="logo-title" :hidden="isCollapse"><span class="bold">W</span>ee <span
@@ -37,36 +37,84 @@
         </el-main>
       </el-container>
     </el-container>
+
+    <div v-if="!isLogin">
+        <el-card class="login-card">
+          <span class="logo-title" :hidden="isCollapse"><span class="bold">W</span>ee <span
+              class="bold">W</span>ebsite <span class="bold">A</span>dmin</span>
+          <el-form>
+            <el-form-item label="用户名">
+              <el-input type="text" v-model="form.username" />
+            </el-form-item>
+            <el-form-item label="密码">
+              <el-input type="password" v-model="form.password" />
+            </el-form-item>
+            <el-button @click="toLogin">登录</el-button>
+          </el-form>
+        </el-card>
+
+    </div>
   </div>
 
 
 </template>
 
 <script>
-
+  import UserSystemAPI from "@/network/user_system_api";
   export default {
     name: 'App',
     components: {},
     data() {
-      const item = {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      };
       return {
         isCollapse: false,
-        tableData: Array(50).fill(item)
+        isLogin: false,
+        form: {
+          username: null,
+          password: null,
+        }
       }
     },
     methods: {
       switchMenu() {
         this.isCollapse = !this.isCollapse;
+      },
+      toLogin() {
+        UserSystemAPI.login(this.form.username, this.form.password).then(res => {
+          if (res.result) {
+            localStorage.setItem("token", res.data);
+            this.$message({
+              message: "登录成功",
+              type: "success"
+            });
+            this.isLogin = true;
+            this.$router.push('/home');
+          } else {
+            this.$message({
+              message: res.message,
+              type: "success"
+            });
+          }
+        });
       }
     },
     computed: {
       navigationTitle() {
         return '';
 
+      }
+    },
+    mounted() {
+      let token = localStorage.getItem("token");
+      if (token) {
+        UserSystemAPI.valid().then(res => {
+          if (res.result) {
+            localStorage.setItem("token", res.data);
+            this.isLogin = true;
+            this.$router.push('/home');
+          } else {
+            localStorage.clear();
+          }
+        })
       }
     }
   }
@@ -151,5 +199,15 @@
     text-align: center;
     font-size: 18px;
     font-weight: bold;
+  }
+
+  .login-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    transform: translate(-200px, -200px);
+
   }
 </style>

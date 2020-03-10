@@ -46,6 +46,11 @@ export function request(config) {
     headers['Content-Type'] = 'application/json;charset=UTF-8';
   }
 
+  let token = localStorage.getItem("token");
+  if (token) {
+    headers['token'] = token;
+  }
+
 
   const instance = Axios.create({
     baseURL: 'http://api.vaith.xyz:9088',

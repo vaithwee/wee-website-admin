@@ -15,7 +15,7 @@ const Test = () => import('@/views/Test');
 let routes = [
     {
         name: '首页',
-        path: '/',
+        path: '/home',
         component: Home
     },
     {

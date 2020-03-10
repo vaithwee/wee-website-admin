@@ -38,6 +38,7 @@
 
 <script>
   import HomeAPI from "../../network/home_api";
+  import TestApi from "@/network/test_api";
   import ImagePicker from "../../components/image/ImagePicker";
 
   export default {
@@ -59,6 +60,12 @@
 
     },
     created() {
+
+      TestApi.login("wee", "123456").then(res => {
+        localStorage.setItem("token", res.data);
+        console.log(res);
+      });
+
       HomeAPI.getInfo().then(res => {
         this.info = res.data.info;
         this.homeInfoForm.greeting = this.info.greeting;
