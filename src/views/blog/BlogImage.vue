@@ -1,98 +1,102 @@
 <template>
   <div style="height: 100%;" ref="table">
     <div style="text-align: left;padding: 10px;" ref="toolbar">
-      <el-button type="primary" size="medium" @click="createDialogFormVisible = true">上传<i
-          class="el-icon-upload el-icon--right"></i></el-button>
-      <page-bar v-if="pageModel" style="float: right" :page="pageModel" @valueChanged="pageBarValueChanged" ></page-bar>
-
+      <el-button type="primary" size="medium" @click="createDialogFormVisible = true">上传<i class="el-icon-upload el-icon--right" /></el-button>
+      <el-pagination style="float: right"
+                     :page-size="pageModel.size"
+                     :current-page="pageModel.currentPage"
+                     :pager-count="pageModel.totalPage"
+                     layout="prev, pager, next"
+                     @current-change="pageValueChanged"
+                     :total="pageModel.total">
+      </el-pagination>
     </div>
     <el-table
-        :data="list"
-        :max-height="maxHeight + 'px'"
-        border
-        class="text-center"
+            :data="list"
+            :max-height="maxHeight + 'px'"
+            border
+            class="text-center"
     >
       <el-table-column
-          fixed
-          prop="id"
-          label="id"
-          align="center"
-          width="100">
+              fixed
+              prop="id"
+              label="id"
+              align="center"
+              width="100">
       </el-table-column>
 
       <el-table-column
-          fixed
-          label="预览"
-          width="220"
-          align="center"
+              fixed
+              label="预览"
+              width="220"
+              align="center"
       >
         <template slot-scope="scope">
-          <el-image :src="scope.row.previewURL" fit="cover" style="width: 200px;height: 100px"></el-image>
+          <el-image :src="scope.row.previewURL" fit="cover" style="width: 200px;height: 100px"/>
         </template>
       </el-table-column>
 
       <el-table-column
-          prop="originalName"
-          label="名称"
-          align="center"
-          min-width="180">
+              prop="originalName"
+              label="名称"
+              align="center"
+              min-width="180">
       </el-table-column>
 
       <el-table-column
-          prop="name"
-          label="自增名"
-          align="center"
-          min-width="360">
+              prop="name"
+              label="自增名"
+              align="center"
+              min-width="360">
       </el-table-column>
 
 
       <el-table-column
-          prop="key"
-          label="标识"
-          align="center"
-          min-width="360"
+              prop="key"
+              label="标识"
+              align="center"
+              min-width="360"
       >
       </el-table-column>
       <el-table-column
-          prop="contentType"
-          label="文件类型"
-          align="center"
-          min-width="100"
+              prop="contentType"
+              label="文件类型"
+              align="center"
+              min-width="100"
       >
       </el-table-column>
       <el-table-column
-          prop="length"
-          label="文件长度"
-          align="center"
-          min-width="100"
+              prop="length"
+              label="文件长度"
+              align="center"
+              min-width="100"
       >
       </el-table-column>
       <el-table-column
-          prop="width"
-          label="宽度"
-          align="center"
-          min-width="100"
+              prop="width"
+              label="宽度"
+              align="center"
+              min-width="100"
       >
       </el-table-column>
       <el-table-column
-          prop="heigth"
-          label="高度"
-          align="center"
-          min-width="100"
+              prop="heigth"
+              label="高度"
+              align="center"
+              min-width="100"
       >
       </el-table-column>
       <el-table-column
-          align="center"
-          label="操作"
-          fixed="right"
-          width="100">
+              align="center"
+              label="操作"
+              fixed="right"
+              width="100">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
           <el-button type="text" size="small">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
-
 
 
     <el-dialog title="新增图片" :visible.sync="createDialogFormVisible" center>
@@ -115,14 +119,11 @@
 <script>
   import ImageAPI from "@/network/image_api";
   import common from "@/network/common";
-  import PageBar from "@/components/page/PageBar";
 
 
   export default {
     name: "BlogImage",
-    components: {
-      PageBar
-    },
+    components: {},
     data() {
       return {
         formLabelWidth: "120px",
@@ -136,7 +137,12 @@
         },
         file: null,
         createDialogFormVisible: false,
-        pageModel: null,
+        pageModel: {
+          size: 0,
+          total: 0,
+          currentPage: 0,
+          totalPage: 0,
+        },
       }
     },
     created() {
@@ -162,8 +168,8 @@
         })
 
       },
-      pageBarValueChanged(page) {
-        this.page = page;
+      pageValueChanged(page) {
+        this.page = page - 1;
         ImageAPI.getImageList(this.page, this.size).then(res => {
           console.log(res.data);
           this.list = res.data.data;

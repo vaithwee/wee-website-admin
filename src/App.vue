@@ -40,16 +40,18 @@
 
     <div v-if="!isLogin">
         <el-card class="login-card">
-          <span class="logo-title" :hidden="isCollapse"><span class="bold">W</span>ee <span
-              class="bold">W</span>ebsite <span class="bold">A</span>dmin</span>
+          <div slot="header">
+            <span class="logo-title" :hidden="isCollapse"><span class="bold">W</span>ee <span
+                    class="bold">W</span>ebsite <span class="bold">A</span>dmin</span>
+          </div>
           <el-form>
-            <el-form-item label="用户名">
-              <el-input type="text" v-model="form.username" />
+            <el-form-item label="Account">
+              <el-input class="login-input" type="text" v-model="form.username" />
             </el-form-item>
-            <el-form-item label="密码">
-              <el-input type="password" v-model="form.password" />
+            <el-form-item label="Password">
+              <el-input class="login-input" type="password" v-model="form.password" />
             </el-form-item>
-            <el-button @click="toLogin">登录</el-button>
+            <el-button type="primary" @click="toLogin">登录</el-button>
           </el-form>
         </el-card>
 
@@ -61,6 +63,7 @@
 
 <script>
   import UserSystemAPI from "@/network/user_system_api";
+  import TestApi from "./network/test_api";
   export default {
     name: 'App',
     components: {},
@@ -110,12 +113,17 @@
           if (res.result) {
             localStorage.setItem("token", res.data);
             this.isLogin = true;
-            this.$router.push('/home');
+            // this.$router.push('/home');
           } else {
             localStorage.clear();
           }
         })
       }
+    },
+    created() {
+      TestApi.noen().then(res => {
+        console.log(res);
+      });
     }
   }
 </script>
@@ -208,6 +216,14 @@
     width: 400px;
     height: 400px;
     transform: translate(-200px, -200px);
+  }
 
+  .login-card input {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    outline: none;
+    border-bottom: 1px solid #333333;
   }
 </style>

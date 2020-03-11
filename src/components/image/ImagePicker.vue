@@ -49,7 +49,7 @@
       toShowImageList() {
         if (this.images.length === 0) {
           ImageAPI.getImageList(0, 20).then(res => {
-            this.images = res.data;
+            this.images = res.data.data;
           });
         }
       },
