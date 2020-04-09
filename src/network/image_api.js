@@ -24,6 +24,15 @@ let ImageAPI = {
             }],
             isFile: true,
         });
+    },
+    remove: function (id) {
+        return request({
+            url: '/image/remove',
+            method: 'post',
+            data: {
+                id
+            },
+        })
     }
 };
 

@@ -5,7 +5,7 @@
               class="el-icon-upload el-icon--right"/></el-button>
       <el-pagination style="float: right"
                      :page-size="pageModel.size"
-                     :current-page="pageModel.currentPage"
+                     :current-page="pageModel.currentPage+1"
                      :pager-count="pageModel.totalPage"
                      layout="prev, pager, next"
                      @current-change="pageValueChanged"
@@ -31,7 +31,7 @@
               align="center"
       >
         <template slot-scope="scope" >
-          <el-image :src="scope.row.previewURL" fit="cover" style="width: 200px;height: 100px" :preview-src-list="imgs" />
+          <a :href="scope.row.originalURL" target="_blank"><el-image :src="scope.row.previewURL" fit="cover" style="width: 180px;height: 100px" /></a>
         </template>
       </el-table-column>
 
@@ -89,23 +89,15 @@
               align="center"
               label="操作"
               fixed="right"
-              :show-overflow-tooltip="true"
               width="100">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-          <el-popover
-                  placement="bottom"
-                  title="标题"
-                  width="200"
-                  trigger="click"
-                 >
-            <p>这是一段内容这是一段内容确定删除吗？</p>
-            <div style="text-align: right; margin: 0">
-              <el-button size="mini" type="text">取消</el-button>
-              <el-button type="primary" size="mini" @click="visible = false">确定</el-button>
-            </div>
-            <el-button type="text" size="small" slot="reference">删除</el-button>
-          </el-popover>
+          <el-popconfirm
+              title="确定删除吗？"
+              icon-color="red"
+              @onConfirm="toDeleteImage(scope.row.id, index)"
+          >
+            <el-button slot="reference" type="danger" size="small">删除</el-button>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -185,7 +177,7 @@
           this.createDialogFormVisible = false;
           this.loading = false;
           if (res.result === true) {
-            this.list.push(res.data);
+            this.list.unshift(res.data);
           }
         })
 
@@ -197,6 +189,13 @@
           this.list = res.data.data;
           this.pageModel = res.data;
         });
+      },
+      toDeleteImage(id, index) {
+        ImageAPI.remove(id).then(res => {
+          if (res.result === true) {
+            this.list.splice(index, 1);
+          }
+        })
       }
     }
   }
@@ -205,6 +204,7 @@
 <style scoped>
   .text-center {
     text-align: center;
+    /*max-height: 100%;*/
   }
 
   .image-list-table {
