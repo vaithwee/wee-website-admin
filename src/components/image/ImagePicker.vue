@@ -3,7 +3,7 @@
     <el-popover
             placement="right"
             width="430" v-model="visible" @show="toShowImageList">
-      <scroll style="width: 100%;height: 400px;">
+      <scroll style="width: 100%;height: 400px;overflow: hidden">
         <el-row :gutter="10">
           <image-picker-item v-for="(item, index) in this.images"
                              :key="index"

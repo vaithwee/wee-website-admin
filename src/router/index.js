@@ -13,53 +13,57 @@ const Home = () => import('@/views/home/Home');
 const Test = () => import('@/views/Test');
 
 let routes = [
-    {
-        name: '首页',
-        path: '/home',
-        component: Home
-    },
-    {
-        name: '博客',
-        path: '/blog',
-        component: Blog,
-        children: [
-            {
-                name:'文章',
-                path: 'article',
-                component: BlogArticle
-            },
-            {
-                name: '编辑',
-                path: 'edit',
-                component: BlogEdit
-            },
-            {
-                name: '分类',
-                path: 'category',
-                component: BlogCategory
-            },
-            {
-                name: '标签',
-                path: 'tag',
-                component: BlogTag
-            },
-            {
-                name: '图片',
-                path: 'image',
-                component: BlogImage
-            },
-        ]
-    },
-    {
-        name: 'test',
-        path: '/test',
-        component: Test
-    }
+  {
+    name: '首页',
+    path: '/',
+    component: Home
+  },
+  {
+    name: '博客',
+    path: '/blog',
+    component: Blog,
+    children: [
+      {
+        name: '文章',
+        path: 'article',
+        component: BlogArticle
+      },
+      {
+        name: '编辑',
+        path: 'edit',
+        component: BlogEdit
+      },
+      {
+        name: '分类',
+        path: 'category',
+        component: BlogCategory
+      },
+      {
+        name: '标签',
+        path: 'tag',
+        component: BlogTag
+      },
+      {
+        name: '图片',
+        path: 'image',
+        component: BlogImage
+      },
+    ]
+  },
+  {
+    name: 'test',
+    path: '/test',
+    component: Test
+  },
+  {
+    path: '/login',
+    component: Test
+  }
 ];
 
 let router = new VueRouter({
-    routes,
-    mode: 'history'
+  routes,
+  mode: 'history'
 });
 
 export default router;

@@ -129,6 +129,9 @@
 </script>
 
 <style>
+
+  @import "assets/css/common.css";
+  
   body {
     margin: 0;
   }

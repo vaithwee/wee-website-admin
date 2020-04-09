@@ -4,6 +4,10 @@ import JSONUtil from "../util/json_util";
 import SecurityUtil from "../config/security_util";
 import SecurityConfig from "../config/security_config";
 
+// import router from "../router";
+
+// import {Message} from "element-ui";
+
 export function request(config) {
 
   let info = {
@@ -53,7 +57,7 @@ export function request(config) {
 
 
   const instance = Axios.create({
-    baseURL: 'http://api.vaith.xyz:9088',
+    baseURL: 'http://localhost:9088',
     timeout: 60000,
     transformRequest: [function (data) {
       if (data === undefined) {
@@ -73,6 +77,12 @@ export function request(config) {
   });
 
   instance.interceptors.response.use(res => {
+    console.log(this);
+    // router.push("/login").then(r => {
+    //     //   console.log(r);
+    //     // });
+
+    // Message.success("net work complete");
     if (res.headers.en === "0") {
       return res.data;
     } else {
