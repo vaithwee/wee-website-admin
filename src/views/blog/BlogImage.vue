@@ -2,8 +2,9 @@
   <div style="height: 100%;" ref="table">
     <div style="text-align: left;padding: 10px;" ref="toolbar">
       <el-button type="primary" size="medium" @click="createDialogFormVisible = true">上传<i
-              class="el-icon-upload el-icon--right"/></el-button>
+          class="el-icon-upload el-icon--right"/></el-button>
       <el-pagination style="float: right"
+                     background
                      :page-size="pageModel.size"
                      :current-page="pageModel.currentPage+1"
                      :pager-count="pageModel.totalPage"
@@ -13,83 +14,92 @@
       </el-pagination>
     </div>
     <el-table
-            :data="list"
-            :max-height="maxHeight + 'px'"
-            border
-            class="text-center"
+        :data="list"
+        :max-height="maxHeight + 'px'"
+        border
+        class="text-center"
     >
       <el-table-column
-              prop="id"
-              label="id"
-              align="center"
-              width="100">
+          prop="id"
+          label="id"
+          align="center"
+          width="100">
       </el-table-column>
 
       <el-table-column
-              label="预览"
-              width="220"
-              align="center"
+          label="预览"
+          width="220"
+          align="center"
       >
-        <template slot-scope="scope" >
-          <a :href="scope.row.originalURL" target="_blank"><el-image :src="scope.row.previewURL" fit="cover" style="width: 180px;height: 100px" /></a>
+        <template slot-scope="scope">
+          <a :href="scope.row.originalURL" target="_blank">
+            <el-image :src="scope.row.previewURL" fit="cover" style="width: 180px;height: 100px"/>
+          </a>
         </template>
       </el-table-column>
 
       <el-table-column
-              prop="originalName"
-              label="名称"
-              align="center"
-              min-width="180">
+          prop="originalName"
+          label="名称"
+          align="center"
+          min-width="180">
       </el-table-column>
 
       <el-table-column
-              prop="name"
-              label="自增名"
-              align="center"
-              min-width="360">
+          prop="name"
+          label="自增名"
+          align="center"
+          min-width="360">
       </el-table-column>
 
 
       <el-table-column
-              prop="key"
-              label="标识"
-              align="center"
-              min-width="360"
+          prop="key"
+          label="标识"
+          align="center"
+          min-width="360"
       >
       </el-table-column>
       <el-table-column
-              prop="contentType"
-              label="文件类型"
-              align="center"
-              min-width="100"
+          prop="contentType"
+          label="文件类型"
+          align="center"
+          min-width="100"
       >
       </el-table-column>
       <el-table-column
-              prop="length"
-              label="文件长度"
-              align="center"
-              min-width="100"
+          prop="length"
+          label="文件长度"
+          align="center"
+          min-width="100"
       >
       </el-table-column>
       <el-table-column
-              prop="width"
-              label="宽度"
-              align="center"
-              min-width="100"
+          prop="width"
+          label="宽度"
+          align="center"
+          min-width="100"
       >
       </el-table-column>
       <el-table-column
-              prop="heigth"
-              label="高度"
-              align="center"
-              min-width="100"
+          prop="height"
+          label="高度"
+          align="center"
+          min-width="100"
       >
       </el-table-column>
       <el-table-column
-              align="center"
-              label="操作"
-              fixed="right"
-              width="100">
+          prop="createDate"
+          label="上传时间"
+          align="center"
+          min-width="100"
+      >
+      </el-table-column>
+      <el-table-column
+          align="center"
+          label="操作"
+          fixed="right"
+          width="100">
         <template slot-scope="scope">
           <el-popconfirm
               title="确定删除吗？"
@@ -103,24 +113,22 @@
     </el-table>
 
 
-
-    <el-dialog title="新增图片" :visible.sync="createDialogFormVisible" width="600px" style="" center >
-      <el-form :model="form" >
+    <el-dialog title="新增图片" :visible.sync="createDialogFormVisible" width="600px" style="" center>
+      <el-form :model="form">
         <el-form-item label="名称" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off" placeholder="如不填写, 将使用默认名称" />
+          <el-input v-model="form.name" autocomplete="off" placeholder="如不填写, 将使用默认名称"/>
         </el-form-item>
         <el-form-item label="图片" :label-width="formLabelWidth">
-          <input ref="fileInt" type="file" />
+          <input ref="fileInt" type="file"/>
         </el-form-item>
 
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="createDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="upload" :loading="loading">{{loading ? '上传中' : '确 定'}}</el-button>
+        <el-button @click="createDialogFormVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="upload" :loading="loading" size="small">{{loading ? '上传中' : '确 定'}}</el-button>
       </div>
     </el-dialog>
-
 
 
   </div>
@@ -155,7 +163,7 @@
           totalPage: 0,
         },
         loading: false,
-        imgs:['http://image.vaith.xyz/1f98147c-50c0-4036-aabd-d2dc8c50ada7?e=1586421187&token=jkQxatRbEmkgdq6t2nFPi_TOdl6_1yRBboSJXC2M:BLOOthZNrJSa4biM50Vt-N_qNTo='],
+        imgs: ['http://image.vaith.xyz/1f98147c-50c0-4036-aabd-d2dc8c50ada7?e=1586421187&token=jkQxatRbEmkgdq6t2nFPi_TOdl6_1yRBboSJXC2M:BLOOthZNrJSa4biM50Vt-N_qNTo='],
       }
     },
     created() {
