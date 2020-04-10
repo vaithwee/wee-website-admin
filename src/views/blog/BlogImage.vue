@@ -89,6 +89,27 @@
       >
       </el-table-column>
       <el-table-column
+          prop="server.text"
+          label="服务器"
+          align="center"
+          min-width="100"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="bucket.text"
+          label="空间"
+          align="center"
+          min-width="100"
+      >
+      </el-table-column>
+      <el-table-column
+          prop="type.text"
+          label="访问控制"
+          align="center"
+          min-width="100"
+      >
+      </el-table-column>
+      <el-table-column
           label="上传时间"
           align="center"
           min-width="200"
