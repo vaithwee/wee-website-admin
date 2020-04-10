@@ -5,16 +5,17 @@
           class="el-icon-upload el-icon--right"/></el-button>
       <el-pagination style="float: right"
                      background
-                     :page-size="pageModel.size"
-                     :current-page="pageModel.currentPage+1"
-                     :pager-count="pageModel.totalPage"
-                     layout="prev, pager, next"
-                     @current-change="pageValueChanged"
-                     :total="pageModel.total">
+                     :page-size="data.size"
+                     :current-page="data.currentPage+1"
+                     :pager-count="5"
+                     layout="prev, pager, next, sizes, total"
+                     @current-change="refreshData"
+                     @size-change="refreshSize"
+                     :total="data.total">
       </el-pagination>
     </div>
     <el-table
-        :data="list"
+        :data="data.data"
         :max-height="maxHeight + 'px'"
         border
         class="text-center"
@@ -22,12 +23,14 @@
       <el-table-column
           prop="id"
           label="id"
+          fixed
           align="center"
           width="100">
       </el-table-column>
 
       <el-table-column
           label="预览"
+          fixed
           width="220"
           align="center"
       >
@@ -127,7 +130,7 @@
           <el-popconfirm
               title="确定删除吗？"
               icon-color="red"
-              @onConfirm="toDeleteImage(scope.row.id, index)"
+              @onConfirm="deleteImage(scope.row.id)"
           >
             <el-button slot="reference" type="danger" size="mini">删除</el-button>
           </el-popconfirm>
@@ -138,10 +141,10 @@
 
     <el-dialog title="新增图片" :visible.sync="createDialogFormVisible" width="600px" style="" center>
       <el-form :model="form">
-        <el-form-item label="名称" :label-width="formLabelWidth">
+        <el-form-item label="名称" label-width="100px">
           <el-input v-model="form.name" autocomplete="off" placeholder="如不填写, 将使用默认名称"/>
         </el-form-item>
-        <el-form-item label="图片" :label-width="formLabelWidth">
+        <el-form-item label="图片" label-width="100px">
           <input ref="fileInt" type="file"/>
         </el-form-item>
 
@@ -149,7 +152,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="createDialogFormVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="upload" :loading="loading" size="small">{{loading ? '上传中' : '确 定'}}</el-button>
+        <el-button type="primary" @click="uploadImage" :loading="loading" size="small">{{loading ? '上传中' : '确 定'}}</el-button>
       </div>
     </el-dialog>
 
@@ -168,65 +171,61 @@
     components: {},
     data() {
       return {
-        formLabelWidth: "100px",
-        list: [],
-        maxHeight: 2000,
-        page: common.page,
-        size: common.size,
-        form: {
-          name: '',
-          file: null,
-        },
-        file: null,
-        visible: true,
-        createDialogFormVisible: false,
-        pageModel: {
-          size: 0,
+        //table data
+        data: {
+          size: common.size,
           total: 0,
           currentPage: 0,
           totalPage: 0,
+          data: []
         },
+        //form data
+        form: {
+          name: '',
+        },
+
+        maxHeight: 2000,
+        createDialogFormVisible: false,
         loading: false,
-        imgs: ['http://image.vaith.xyz/1f98147c-50c0-4036-aabd-d2dc8c50ada7?e=1586421187&token=jkQxatRbEmkgdq6t2nFPi_TOdl6_1yRBboSJXC2M:BLOOthZNrJSa4biM50Vt-N_qNTo='],
       }
     },
     created() {
-      ImageAPI.getImageList(this.page, this.size).then(res => {
-        console.log(res.data);
-        this.list = res.data.data;
-        this.pageModel = res.data;
-      });
+      this.getData();
     },
     mounted() {
       this.maxHeight = this.$refs.table.offsetHeight - this.$refs.toolbar.offsetHeight;
     },
     methods: {
-      upload() {
+      getData() {
+        ImageAPI.getImageList(this.data.currentPage, this.data.size).then(res => {
+          this.data = res.data;
+        });
+      },
+      refreshData(page) {
+        page = page - 1;
+        ImageAPI.getImageList(page, this.data.size).then(res => {
+          this.data = res.data;
+        });
+      },
+      refreshSize(size) {
+        this.data.size = size;
+        this.getData();
+      },
+      uploadImage() {
         this.loading = true;
         const file = this.$refs.fileInt.files[0];
-        console.log(file);
         ImageAPI.upload(file, this.form.name).then(res => {
           this.createDialogFormVisible = false;
           this.loading = false;
-          if (res.result === true) {
-            this.list.unshift(res.data);
-          }
+          this.getData();
+          this.$notify({title: '提示', message: '上传成功!', type: 'success'});
         })
-
       },
-      pageValueChanged(page) {
-        this.page = page - 1;
-        ImageAPI.getImageList(this.page, this.size).then(res => {
-          console.log(res.data);
-          this.list = res.data.data;
-          this.pageModel = res.data;
-        });
-      },
-      toDeleteImage(id, index) {
+      deleteImage(id) {
         ImageAPI.remove(id).then(res => {
-          if (res.result === true) {
-            this.list.splice(index, 1);
-          }
+            this.getData();
+            this.$notify({title: '提示', message: '删除成功!', type: 'success'});
+
         })
       },
       dateToString(date) {

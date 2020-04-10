@@ -4,10 +4,8 @@ import JSONUtil from "../util/json_util";
 let SecurityUtil = {
 
   encryptString: function (key, str) {
-    console.log("key: "+ key + " str: " + str);
     key = cryptoJS.enc.Utf8.parse(key);
     str = cryptoJS.enc.Utf8.parse(str);
-    console.log("1111 key: "+ key + " str: " + str);
     return cryptoJS.AES.encrypt(str, key, {
       mode: cryptoJS.mode.ECB,
       padding: cryptoJS.pad.Pkcs7

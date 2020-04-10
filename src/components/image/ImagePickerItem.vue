@@ -29,8 +29,6 @@
     },
     methods: {
       handleClick() {
-        console.log("click");
-        // this.isChecked = !this.isChecked;
         this.$emit("checked", this.item);
       }
 

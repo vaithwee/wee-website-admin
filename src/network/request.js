@@ -4,9 +4,7 @@ import JSONUtil from "../util/json_util";
 import SecurityUtil from "../config/security_util";
 import SecurityConfig from "../config/security_config";
 
-// import router from "../router";
-
-// import {Message} from "element-ui";
+import {Notification} from "element-ui";
 
 export function request(config) {
 
@@ -15,6 +13,8 @@ export function request(config) {
     "appid": 1,
     "timestamp": Date.parse(new Date()),
   };
+
+
 
 
   /////////////////////////////////////////////////////////////////
@@ -31,7 +31,6 @@ export function request(config) {
   info = JSONUtil.sort(info);
   let infoSSign = SecurityUtil.encryptJsonToMD5(SecurityConfig.accessKey, info);
   let bodySign = "";
-  console.log(typeof config.data);
   if (config.data !== undefined) {
      let data = JSONUtil.sort(config.data);
     bodySign = SecurityUtil.MD5(JSON.stringify(data));
@@ -60,6 +59,7 @@ export function request(config) {
     baseURL: 'http://localhost:9088',
     timeout: 60000,
     transformRequest: [function (data) {
+      console.log("解析器");
       if (data === undefined) {
         return data;
       }
@@ -73,23 +73,23 @@ export function request(config) {
   instance.interceptors.request.use(config => {
     return config;
   }, error => {
-    console.log(error);
+    Notification.error("服务器开小差, 请稍后再试");
   });
 
   instance.interceptors.response.use(res => {
-    console.log(this);
-    // router.push("/login").then(r => {
-    //     //   console.log(r);
-    //     // });
-
-    // Message.success("net work complete");
+    let response = null;
     if (res.headers.en === "0") {
-      return res.data;
+      response = res.data;
     } else {
-      return JSON.parse(SecurityUtil.decryptString(SecurityConfig.securityKey, res.data));
+      response = JSON.parse(SecurityUtil.decryptString(SecurityConfig.securityKey, res.data));
+    }
+    if (response.result === true) {
+      return response;
+    } else  {
+      Notification.error("服务器开小差, 请稍后再试");
     }
   }, error => {
-    console.log(error);
+    Notification.error("服务器开小差, 请稍后再试");
   });
 
   return instance(config);
