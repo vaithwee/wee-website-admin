@@ -27,7 +27,7 @@
 <script>
   import common from "@/network/common";
   export default {
-    name: "Table",
+    name: "TableView",
     props: {
       data: {
         type: Object,
