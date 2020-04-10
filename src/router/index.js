@@ -19,6 +19,11 @@ let routes = [
     component: Home
   },
   {
+    name: '首页',
+    path: '/home',
+    component: Home
+  },
+  {
     name: '博客',
     path: '/blog',
     component: Blog,

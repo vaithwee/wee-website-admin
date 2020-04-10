@@ -5,7 +5,7 @@
                 <el-input v-model="form.title" ></el-input>
             </el-form-item>
             <el-form-item label="封面" >
-                <el-image v-if="form.cover != null" :src="form.cover.previewURL"></el-image>
+                <el-image v-if="form.cover != null" :src="form.cover.previewURL" />
                 <image-picker @sure="toHandleImagePicker">
                     <div slot="default">
                         <el-button type="primary" size="mini">选取</el-button>
@@ -26,7 +26,7 @@
                 </el-checkbox-group>
             </el-form-item>
             <el-form-item label="内容">
-                <markdown-pro ref="markdown" v-model="form.content"></markdown-pro>
+                <markdown-pro ref="markdown" v-model="form.content" />
             </el-form-item>
             <el-button type="primary" @click="postArticle">提交</el-button>
         </el-form>

@@ -10,7 +10,7 @@
           <div>
             <el-form label-position="top" label-width="80px">
               <el-form-item label="封面">
-                <el-image :src="coverURL" fit="cover" style="height: 200px;width: 100%">
+                <el-image :src="coverURL" fit="cover" style="height: 200px;width: 100%" :preview-src-list="[coverURL]">
                   <div slot="error" style="background-color: #f6f6f6;text-align: center">
                     <h4 style="line-height: 200px">暂时未设置</h4>
                   </div>

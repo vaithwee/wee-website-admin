@@ -89,11 +89,13 @@
       >
       </el-table-column>
       <el-table-column
-          prop="createDate"
           label="上传时间"
           align="center"
-          min-width="100"
+          min-width="200"
       >
+        <template slot-scope="scope">
+          <span>{{dateToString(scope.row.createDate)}}</span>
+        </template>
       </el-table-column>
       <el-table-column
           align="center"
@@ -106,7 +108,7 @@
               icon-color="red"
               @onConfirm="toDeleteImage(scope.row.id, index)"
           >
-            <el-button slot="reference" type="danger" size="small">删除</el-button>
+            <el-button slot="reference" type="danger" size="mini">删除</el-button>
           </el-popconfirm>
         </template>
       </el-table-column>
@@ -137,6 +139,7 @@
 <script>
   import ImageAPI from "@/network/image_api";
   import common from "@/network/common";
+  import DateUtil from "../../util/date_util";
 
 
   export default {
@@ -204,6 +207,9 @@
             this.list.splice(index, 1);
           }
         })
+      },
+      dateToString(date) {
+        return DateUtil.dateFormat('HH:mm:ss M月d日, YYYY', new Date(date));
       }
     }
   }
