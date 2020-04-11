@@ -45,10 +45,10 @@
     },
     methods: {
       currentChanged(current) {
-        this.$emit("currentChanged", current);
+        this.$emit("current-changed", current);
       },
       sizeChanged(size) {
-        this.$emit("sizeChanged", size);
+        this.$emit("size-changed", size);
       }
     },
     mounted() {

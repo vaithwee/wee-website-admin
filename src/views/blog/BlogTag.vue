@@ -1,141 +1,168 @@
 <template>
-    <div style="height: 100%;" ref="table">
-        <div style="text-align: left;padding: 10px;" ref="toolbar">
-            <el-button type="primary" @click="createDialogFormVisible = true">新建</el-button>
-        </div>
+  <div style="height: 100%;" ref="table">
 
-        <el-table
-                :data="list"
-                style="width: auto;"
-                :max-height="maxHeight + 'px'"
-                border
-        >
-            <el-table-column
-                    fixed
-                    prop="id"
-                    label="标签ID"
-                    width="100">
-            </el-table-column>
+    <table-view :data="data" @current-changed="refreshData" @size-changed="refreshSize">
+      <template slot="tool-bar">
+        <el-button type="primary" @click="createDialogFormVisible = true" size="medium">新建 <i class="el-icon-plus el-icon--right"></i></el-button>
+      </template>
+      <template slot="table-content">
+        <el-table-column
+            fixed
+            prop="id"
+            label="标签ID"
+            align="center"
+            min-width="100">
+        </el-table-column>
 
-            <el-table-column
-                    prop="name"
-                    label="标签名称"
-                    width="150">
-            </el-table-column>
+        <el-table-column
+            prop="name"
+            label="标签名称"
+            align="center"
+            min-width="150">
+        </el-table-column>
 
-            <el-table-column
-                    prop="type"
-                    label="标签类型"
-                    width="150">
-            </el-table-column>
+        <el-table-column
+            prop="type"
+            label="标签类型"
+            align="center"
+            min-width="150">
+        </el-table-column>
 
-            <el-table-column
-                    prop="sort"
-                    label="标签排序"
-                    width="150">
-            </el-table-column>
-            <el-table-column
-                    prop="createDate"
-                    label="创建日期"
-                    width="150">
-            </el-table-column>
-            <el-table-column
-                    prop="updateDate"
-                    label="更新日期"
-                    width="150">
-            </el-table-column>
+        <el-table-column
+            prop="sort"
+            label="标签排序"
+            align="center"
+            min-width="150">
+        </el-table-column>
+        <el-table-column
+            prop="createDate"
+            align="center"
+            label="创建日期"
+            min-width="150">
+          <template slot-scope="scope">
+            {{dateToString(scope.row.createDate)}}
+          </template>
+        </el-table-column>
+        <el-table-column
+            prop="updateDate"
+            align="center"
+            label="更新日期"
+            min-width="150">
+          <template slot-scope="scope">
+            {{dateToString(scope.row.updateDate)}}
+          </template>
+        </el-table-column>
 
-            <el-table-column
-                    fixed="right"
-                    label="操作"
-                    min-width="100"
-                    width="auto" >
-                <template slot-scope="scope" style="text-align: right">
-                    <el-button type="text" size="small">编辑</el-button>
-                    <el-button @click="removeTag(scope.row.id, scope.$index)" type="text" size="small">删除</el-button>
+        <el-table-column
+            fixed="right"
+            label="操作"
+            align="center"
+            min-width="100"
+            width="auto">
+          <template slot-scope="scope" style="text-align: right">
+            <el-button slot="reference" type="primary" size="mini" style="margin: 5px;" @click="editTag(scope.row)">编辑</el-button>
+            <delete-button @onConfirm="removeTag(scope.row.id, scope.$index)"/>
 
-                </template>
-            </el-table-column>
-        </el-table>
+          </template>
+        </el-table-column>
+      </template>
+    </table-view>
 
-        <el-dialog title="新增标签" :visible.sync="createDialogFormVisible" center>
-            <el-form :model="form">
-                <el-form-item label="标签名称" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="标签类型" :label-width="formLabelWidth">
-                    <el-select v-model="form.type" placeholder="请选择标签类型">
-                        <el-option label="普通" value="1"></el-option>
-                        <el-option label="推荐" value="2"></el-option>
-                        <el-option label="热" value="3"></el-option>
-                        <el-option label="严肃" value="4"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="标签排序" :label-width="formLabelWidth">
-                    <el-input v-model="form.order" auto-complete="off"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="createDialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addTag">确 定</el-button>
-            </div>
-        </el-dialog>
-    </div>
+
+    <tag-edit-view :data="addForm" :visible="createDialogFormVisible" @save="addTag" @cancel="createDialogFormVisible = false" />
+    <tag-edit-view :data="editForm" :visible="editDialogFormVisible" @save="updateTag" @cancel="editDialogFormVisible = false" />
+  </div>
 
 
 </template>
 
 <script>
-    import TagAPI from "@/network/tag_api";
-    import common from "@/network/common";
+  import TagAPI from "@/network/tag_api";
+  import common from "@/network/common";
+  import TableView from "@/components/table/TableView";
+  import DeleteButton from "@/components/button/DeleteButton";
+  import DateUtil from "@/util/date_util";
+  import TagEditView from "@/components/tag/TagEditView";
 
-    export default {
-        name: "BlogTag",
-        data() {
-            return {
-                formLabelWidth: '200px',
-                createDialogFormVisible: false,
-                form: {
-                    name: '',
-                    type: null,
-                    order: 0,
-                },
-                list:[],
-                page: common.page,
-                size: common.size,
-                maxHeight: 2000,
-            }
+  export default {
+    name: "BlogTag",
+    components: {
+      TagEditView,
+      DeleteButton,
+      TableView,
+    },
+    data() {
+      return {
+        formLabelWidth: '200px',
+        createDialogFormVisible: false,
+        editDialogFormVisible: false,
+        addForm: {
+          name: '',
+          type: null,
+          sort: 0,
         },
-        mounted() {
-            this.maxHeight = this.$refs.table.offsetHeight - this.$refs.toolbar.offsetHeight;
+        editForm: {
+          name: '',
+          type: null,
+          sort: 0,
+          id: 0,
         },
-        created() {
-            TagAPI.getTagList(this.page, this.size).then(res => {
-               this.list = res.data;
-            });
-        },
-        methods: {
-            addTag() {
-                this.createDialogFormVisible = false;
-                TagAPI.addTag(this.form.name, this.form.type, this.form.order).then(res => {
-                    console.log(res);
-                });
-            },
-            removeTag(id, index) {
-                this.$confirm('此操作将永久删除此标签, 是否继续', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                }).then(() => {
-                    TagAPI.removeTag(id).then(res => {
-                        if (res.result === true) {
-                            this.list.splice(index, 1);
-                        }
-                    });
-                })
-            }
-        }
+        data: common.paging,
+
+      }
+    },
+
+    created() {
+      this.getData();
+    },
+    methods: {
+      getData() {
+        TagAPI.getTagList(this.data.currentPage, this.data.size).then(res => {
+          this.data = res.data;
+        });
+      },
+      refreshData(page) {
+        this.data.currentPage = page - 1;
+        this.getData();
+      },
+      refreshSize(size) {
+        this.data.size = size;
+        this.data.currentPage = 0;
+        this.getData();
+      },
+      addTag(tag) {
+        this.addForm = tag;
+        this.createDialogFormVisible = false;
+        TagAPI.addTag(this.addForm.name, this.addForm.type, this.addForm.sort).then(res => {
+          this.getData();
+        });
+      },
+      removeTag(id, index) {
+        TagAPI.removeTag(id).then(res => {
+          this.getData();
+        });
+      },
+      editTag(tag) {
+        this.editForm.id = tag.id;
+        this.editForm.name = tag.name;
+        this.editForm.sort = tag.sort;
+        this.editForm.type = tag.type;
+        this.editDialogFormVisible = true;
+      },
+      updateTag(tag) {
+        this.editForm = tag;
+        this.createDialogFormVisible = false;
+        TagAPI.updateTag(this.editForm.id, this.editForm.name, this.editForm.type, this.editForm.sort).then(res => {
+          this.editDialogFormVisible = false;
+          this.getData();
+        })
+      },
+
+      dateToString(date) {
+        return DateUtil.dateFormat('HH:mm:ss M月d日, YYYY', new Date(date));
+      }
     }
+  }
 </script>
 
 <style scoped>

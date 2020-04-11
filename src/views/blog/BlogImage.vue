@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%;" >
-    <table-view :data="data">
+    <table-view :data="data" @current-changed="refreshData" @size-changed="refreshSize">
       <template slot="tool-bar">
         <el-button type="primary" size="medium" @click="createDialogFormVisible = true">上传<i
             class="el-icon-upload el-icon--right"/></el-button>
@@ -113,13 +113,7 @@
             fixed="right"
             width="100">
           <template slot-scope="scope">
-            <el-popconfirm
-                title="确定删除吗？"
-                icon-color="red"
-                @onConfirm="deleteImage(scope.row.id)"
-            >
-              <el-button slot="reference" type="danger" size="mini">删除</el-button>
-            </el-popconfirm>
+            <delete-button @onConfirm="deleteImage(scope.row.id)" />
           </template>
         </el-table-column>
       </template>
@@ -149,11 +143,13 @@
   import common from "@/network/common";
   import DateUtil from "../../util/date_util";
   import TableView from "@/components/table/TableView";
+  import DeleteButton from "@/components/button/DeleteButton";
 
   export default {
     name: "BlogImage",
     components: {
       TableView,
+      DeleteButton
     },
     data() {
       return {
@@ -170,16 +166,12 @@
           name: '',
         },
 
-        maxHeight: 2000,
         createDialogFormVisible: false,
         loading: false,
       }
     },
     created() {
       this.getData();
-    },
-    mounted() {
-      this.maxHeight = this.$refs.table.offsetHeight - this.$refs.toolbar.offsetHeight;
     },
     methods: {
       getData() {
@@ -195,6 +187,7 @@
       },
       refreshSize(size) {
         this.data.size = size;
+        this.data.currentPage = 0;
         this.getData();
       },
       uploadImage() {
