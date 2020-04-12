@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;" ref="table">
+  <div style="height: 100%;">
 
     <table-view :data="data" @current-changed="refreshData" @size-changed="refreshSize">
       <template slot="tool-bar">

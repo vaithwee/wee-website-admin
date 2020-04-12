@@ -1,5 +1,5 @@
 const page = 0;
-const size = 10;
+const size = 20;
 
 const paging = {
     size: size,

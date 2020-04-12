@@ -1,59 +1,55 @@
 <template>
-    <div style="height: 100%;" ref="table">
-        <div style="text-align: left;padding: 10px;" ref="toolbar">
-            <el-button type="primary" @click="createDialogFormVisible = true">新建</el-button>
-        </div>
-        <el-table
-                :data="list"
-                style="width: auto;"
-                :max-height="maxHeight + 'px'"
-                border
-        >
-            <el-table-column
+    <div style="height: 100%;">
+        <table-view :data="data" @current-changed="refreshData" @size-changed="refreshSize">
+            <template slot="tool-bar">
+                <el-button @click="createDialogFormVisible = true" type="primary">新建</el-button>
+            </template>
+            <template slot="table-content">
+                <el-table-column
                     fixed
-                    prop="id"
                     label="分类ID"
-                    width="100">
-            </el-table-column>
+                    prop="id"
+                    min-width="100">
+                </el-table-column>
 
-            <el-table-column
-                    prop="name"
+                <el-table-column
                     label="分类名称"
-                    width="150">
-            </el-table-column>
-            <el-table-column
-                    prop="createDate"
+                    prop="name"
+                    min-width="150">
+                </el-table-column>
+                <el-table-column
                     label="创建日期"
-                    width="150">
-            </el-table-column>
-            <el-table-column
-                    prop="updateDate"
+                    prop="createDate"
+                    min-width="150">
+                </el-table-column>
+                <el-table-column
                     label="更新日期"
-                    width="150">
-            </el-table-column>
+                    prop="updateDate"
+                    min-width="150">
+                </el-table-column>
 
-            <el-table-column
+                <el-table-column
                     fixed="right"
                     label="操作"
-                    min-width="100"
-                    width="auto" >
-                <template slot-scope="scope" style="text-align: right">
-                    <el-button type="text" size="small">编辑</el-button>
-                    <el-button @click="deleteCategoryWithID(scope.row.id, scope.$index)" type="text" size="small">删除</el-button>
+                    width="150" >
+                    <template slot-scope="scope" style="text-align: right">
+                        <el-button size="small" type="text">编辑</el-button>
+                        <delete-button @onConfirm="deleteCategoryWithID(scope.row.id, scope.$index)" />
 
-                </template>
-            </el-table-column>
-        </el-table>
+                    </template>
+                </el-table-column>
+            </template>
+        </table-view>
 
-        <el-dialog title="新增分类" :visible.sync="createDialogFormVisible" center>
+        <el-dialog :visible.sync="createDialogFormVisible" center title="新增分类">
             <el-form :model="form">
-                <el-form-item label="分类名称" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" autocomplete="off"></el-input>
+                <el-form-item :label-width="formLabelWidth" label="分类名称">
+                    <el-input autocomplete="off" v-model="form.name"></el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div class="dialog-footer" slot="footer">
                 <el-button @click="createDialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addCategoryWithName">确 定</el-button>
+                <el-button @click="addCategoryWithName" type="primary">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -64,9 +60,15 @@
 <script>
     import CategoryAPI from "@/network/category_api";
     import common from "@/network/common";
+    import TableView from "@/components/table/TableView";
+    import DeleteButton from "@/components/button/DeleteButton";
 
     export default {
         name: "BlogCategory",
+        components: {
+            DeleteButton,
+          TableView
+        },
         data() {
             return {
                 form: {
@@ -74,53 +76,45 @@
                 },
                 formLabelWidth: '120px',
                 createDialogFormVisible: false,
-                categoryName: null,
-                list: [],
-                maxHeight: 2000,
-                page: common.page,
-                size: common.size
+                data: common.paging,
             }
         },
         created() {
-           this.initData();
-        },
-        mounted() {
-            this.maxHeight = this.$refs.table.offsetHeight - this.$refs.toolbar.offsetHeight;
+           this.getData();
         },
         methods: {
-            initData() {
-                this.page = common.page;
-                this.size = common.size;
-                CategoryAPI.getCategoryList(this.page, this.size).then(res => {
+            getData() {
+                CategoryAPI.getCategoryList(this.data.currentPage, this.data.size).then(res => {
                     console.log(res);
-                    this.list = res.data;
+                    this.data = res.data;
                 });
+            },
+            refreshData(page) {
+                this.data.currentPage = page - 1;
+              this.getData();
+            },
+            refreshSize(size) {
+                this.data.currentPage = 0;
+                this.data.size = size;
+                this.getData();
             },
             addCategoryWithName() {
                 this.createDialogFormVisible = false;
                 CategoryAPI.addCategory(this.form.name).then(res => {
-                    if (res.result === false) {
-                        this.$alert(res.message, '提示', {
-                            confirmButtonText: '确定',
-                        });
-                    } else  {
-                        this.$notify({
-                           title: '分类',
-                            message: '分类添加成功',
-                        });
-                        this.list.push(res.data);
-                    }
+                    this.getData();
+                    this.$notify({
+                        title: '分类',
+                        message: '分类添加成功',
+                    });
                 });
             },
             deleteCategoryWithID(id, index) {
                 CategoryAPI.removeCategoryById(id).then(res => {
-                   if (res.result === true) {
-                       this.$notify({
-                           title: '分类',
-                           message: '分类删除成功'
-                       });
-                       this.list.splice(index, 1);
-                   }
+                    this.$notify({
+                        title: '分类',
+                        message: '分类删除成功'
+                    });
+                    this.getData();
                 });
             },
 
