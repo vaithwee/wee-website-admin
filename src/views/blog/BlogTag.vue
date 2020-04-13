@@ -58,7 +58,7 @@
                 fixed="right"
                 label="操作"
                 align="center"
-                width="150">
+                width="165">
           <template slot-scope="scope" style="text-align: right">
             <el-button slot="reference" type="primary" size="mini" style="margin: 5px;" @click="editTag(scope.row)">编辑
             </el-button>
@@ -84,7 +84,6 @@
   import common from "@/network/common";
   import TableView from "@/components/table/TableView";
   import DeleteButton from "@/components/button/DeleteButton";
-  import DateUtil from "@/util/date_util";
   import TagEditView from "@/components/tag/TagEditView";
 
   export default {
@@ -162,7 +161,7 @@
       },
 
       dateToString(date) {
-        return DateUtil.dateFormat('HH:mm:ss M月d日, YYYY', new Date(date));
+        return this.$utility.date.format(new Date(date));
       }
     }
   }

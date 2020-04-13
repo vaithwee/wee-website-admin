@@ -142,7 +142,6 @@
 <script>
   import ImageAPI from "@/network/image_api";
   import common from "@/network/common";
-  import DateUtil from "../../util/date_util";
   import TableView from "@/components/table/TableView";
   import DeleteButton from "@/components/button/DeleteButton";
 
@@ -209,7 +208,7 @@
         })
       },
       dateToString(date) {
-        return DateUtil.dateFormat('HH:mm:ss M月d日, YYYY', new Date(date));
+        return this.$utility.date.format(new Date(date));
       }
     }
   }
