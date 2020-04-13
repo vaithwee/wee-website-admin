@@ -64,7 +64,7 @@
                 label="操作"
                 width="240">
           <template slot-scope="scope">
-            <el-button type="primary" @click="handleClick(scope.row)" size="mini">查看</el-button>
+            <el-button type="primary" @click="previewArticle(scope.row)" size="mini">查看</el-button>
             <el-button type="warning" size="mini" >编辑</el-button>
             <delete-button />
           </template>
@@ -115,6 +115,10 @@
       },
       formatDateString(date) {
         return this.$utility.date.format( new Date(date));
+      },
+      previewArticle(article) {
+        console.log(article);
+        this.$router.push('/blog/preview/' + article.id);
       }
     }
   }

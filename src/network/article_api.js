@@ -22,7 +22,12 @@ let ArticleAPI = {
                 size
             }
         });
-    }
+    },
+  getArticleDetail: function (id) {
+    return request({
+      url: '/article/detail/' + id,
+    });
+  }
 };
 
 export default ArticleAPI;

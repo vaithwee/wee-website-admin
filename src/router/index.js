@@ -55,8 +55,8 @@ let routes = [
         component: BlogImage
       },
       {
-        name: "文字预览",
-        path: 'preview',
+        name: "文章预览",
+        path: 'preview/:id',
         component: blogArticlePreview
       }
     ]
