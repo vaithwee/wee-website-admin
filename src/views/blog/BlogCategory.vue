@@ -1,125 +1,146 @@
 <template>
-    <div style="height: 100%;">
-        <table-view :data="data" @current-changed="refreshData" @size-changed="refreshSize">
-            <template slot="tool-bar">
-                <el-button @click="createDialogFormVisible = true" type="primary">新建</el-button>
-            </template>
-            <template slot="table-content">
-                <el-table-column
-                    fixed
-                    label="分类ID"
-                    prop="id"
-                    min-width="100">
-                </el-table-column>
+  <div style="height: 100%;">
+    <table-view :data="data" @current-changed="refreshData" @size-changed="refreshSize">
+      <template slot="tool-bar">
+        <el-button @click="createDialogFormVisible = true" type="primary" size="medium">新建 <i
+                class="el-icon-plus el-icon--right"/></el-button>
+      </template>
+      <template slot="table-content">
+        <el-table-column
+                fixed
+                label="分类ID"
+                prop="id"
+                min-width="100">
+        </el-table-column>
 
-                <el-table-column
-                    label="分类名称"
-                    prop="name"
-                    min-width="150">
-                </el-table-column>
-                <el-table-column
-                    label="创建日期"
-                    prop="createDate"
-                    min-width="150">
-                </el-table-column>
-                <el-table-column
-                    label="更新日期"
-                    prop="updateDate"
-                    min-width="150">
-                </el-table-column>
+        <el-table-column
+                label="分类名称"
+                prop="name"
+                min-width="150">
+        </el-table-column>
+        <el-table-column
+                label="创建日期"
+                prop="createDate"
+                min-width="150">
+          <template slot-scope="scope">
+            {{dateToString(scope.row.createDate)}}
+          </template>
+        </el-table-column>
+        <el-table-column
+                label="更新日期"
+                prop="updateDate"
+                min-width="150">
+          <template slot-scope="scope">
+            {{dateToString(scope.row.updateDate)}}
+          </template>
+        </el-table-column>
 
-                <el-table-column
-                    fixed="right"
-                    label="操作"
-                    width="150" >
-                    <template slot-scope="scope" style="text-align: right">
-                        <el-button size="small" type="text">编辑</el-button>
-                        <delete-button @onConfirm="deleteCategoryWithID(scope.row.id, scope.$index)" />
+        <el-table-column
+                fixed="right"
+                label="操作"
+                width="150">
+          <template slot-scope="scope" style="text-align: right">
+            <el-button slot="reference" type="primary" size="mini" class="operation-button" @click="editCategory(scope.row)">编辑</el-button>
+            <delete-button @onConfirm="deleteCategoryWithID(scope.row.id, scope.$index)" class="operation-button"/>
 
-                    </template>
-                </el-table-column>
-            </template>
-        </table-view>
+          </template>
+        </el-table-column>
+      </template>
+    </table-view>
 
-        <el-dialog :visible.sync="createDialogFormVisible" center title="新增分类">
-            <el-form :model="form">
-                <el-form-item :label-width="formLabelWidth" label="分类名称">
-                    <el-input autocomplete="off" v-model="form.name"></el-input>
-                </el-form-item>
-            </el-form>
-            <div class="dialog-footer" slot="footer">
-                <el-button @click="createDialogFormVisible = false">取 消</el-button>
-                <el-button @click="addCategoryWithName" type="primary">确 定</el-button>
-            </div>
-        </el-dialog>
+    <category-edit-view :data="addForm" :visible="createDialogFormVisible" @cancel="createDialogFormVisible = false" @save="addCategory" />
+    <category-edit-view :data="editForm" :visible="editDialogFormVisible" @cancel="editDialogFormVisible = false" @save="updateCategory" />
 
-
-    </div>
+  </div>
 </template>
 
 <script>
-    import CategoryAPI from "@/network/category_api";
-    import common from "@/network/common";
-    import TableView from "@/components/table/TableView";
-    import DeleteButton from "@/components/button/DeleteButton";
+  import CategoryAPI from "@/network/category_api";
+  import common from "@/network/common";
+  import TableView from "@/components/table/TableView";
+  import DeleteButton from "@/components/button/DeleteButton";
+  import DateUtil from "../../util/date_util";
+  import CategoryEditView from "../../components/category/CategoryEditView";
 
-    export default {
-        name: "BlogCategory",
-        components: {
-            DeleteButton,
-          TableView
+  export default {
+    name: "BlogCategory",
+    components: {
+      DeleteButton,
+      TableView,
+      CategoryEditView
+    },
+    data() {
+      return {
+        addForm: {
+          name: '',
         },
-        data() {
-            return {
-                form: {
-                    name: '',
-                },
-                formLabelWidth: '120px',
-                createDialogFormVisible: false,
-                data: common.paging,
-            }
+        editForm: {
+          id: null,
+          name: '',
         },
-        created() {
-           this.getData();
-        },
-        methods: {
-            getData() {
-                CategoryAPI.getCategoryList(this.data.currentPage, this.data.size).then(res => {
-                    console.log(res);
-                    this.data = res.data;
-                });
-            },
-            refreshData(page) {
-                this.data.currentPage = page - 1;
-              this.getData();
-            },
-            refreshSize(size) {
-                this.data.currentPage = 0;
-                this.data.size = size;
-                this.getData();
-            },
-            addCategoryWithName() {
-                this.createDialogFormVisible = false;
-                CategoryAPI.addCategory(this.form.name).then(res => {
-                    this.getData();
-                    this.$notify({
-                        title: '分类',
-                        message: '分类添加成功',
-                    });
-                });
-            },
-            deleteCategoryWithID(id, index) {
-                CategoryAPI.removeCategoryById(id).then(res => {
-                    this.$notify({
-                        title: '分类',
-                        message: '分类删除成功'
-                    });
-                    this.getData();
-                });
-            },
+        formLabelWidth: '120px',
+        createDialogFormVisible: false,
+        editDialogFormVisible: false,
+        data: common.paging,
+      }
+    },
+    created() {
+      this.getData();
+    },
+    methods: {
+      getData() {
+        CategoryAPI.getCategoryList(this.data.currentPage, this.data.size).then(res => {
+          console.log(res);
+          this.data = res.data;
+        });
+      },
+      refreshData(page) {
+        this.data.currentPage = page - 1;
+        this.getData();
+      },
+      refreshSize(size) {
+        this.data.currentPage = 0;
+        this.data.size = size;
+        this.getData();
+      },
+      addCategory(cate) {
+        console.log('save');
+        this.addForm = cate;
+        this.createDialogFormVisible = false;
+        CategoryAPI.addCategory(this.addForm.name).then(res => {
+          this.getData();
+          this.$notify({
+            title: '分类',
+            message: '分类添加成功',
+          });
+        });
+      },
+      deleteCategoryWithID(id, index) {
+        CategoryAPI.removeCategoryById(id).then(res => {
+          this.$notify({
+            title: '分类',
+            message: '分类删除成功'
+          });
+          this.getData();
+        });
+      },
+      editCategory(cate) {
+        this.editForm = cate;
+        this.editDialogFormVisible = true;
+      },
+      updateCategory(cate) {
+        this.editForm = cate;
+        this.editDialogFormVisible = false;
+        CategoryAPI.updateCategory(this.editForm.id, this.editForm.name).then(res => {
+          this.getData();
+        });
+      },
+      dateToString(date) {
+        return DateUtil.dateFormat('HH:mm:ss M月d日, YYYY', new Date(date));
+      },
 
-        }
     }
+  }
 </script>
 
 <style scoped>

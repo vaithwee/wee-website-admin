@@ -3,7 +3,8 @@
 
     <table-view :data="data" @current-changed="refreshData" @size-changed="refreshSize">
       <template slot="tool-bar">
-        <el-button type="primary" @click="createDialogFormVisible = true" size="medium">新建 <i class="el-icon-plus el-icon--right"></i></el-button>
+        <el-button type="primary" @click="createDialogFormVisible = true" size="medium">新建 <i
+                class="el-icon-plus el-icon--right"/></el-button>
       </template>
       <template slot="table-content">
         <el-table-column

@@ -29,7 +29,18 @@ let CategoryAPI = {
             },
             method: 'post'
         });
-    }
+    },
+
+  updateCategory: function (id, name) {
+    return request({
+      url: '/category/update',
+      data: {
+        id,
+        name,
+      },
+      method: 'post'
+    });
+  }
 };
 
 export default CategoryAPI;

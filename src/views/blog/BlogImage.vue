@@ -2,7 +2,7 @@
   <div style="height: 100%;" >
     <table-view :data="data" @current-changed="refreshData" @size-changed="refreshSize">
       <template slot="tool-bar">
-        <el-button type="primary" size="medium" @click="createDialogFormVisible = true">上传<i
+        <el-button type="primary" size="medium" @click="createDialogFormVisible = true">上传 <i
             class="el-icon-upload el-icon--right"/></el-button>
       </template>
       <template slot="table-content">
