@@ -1,82 +1,123 @@
 <template>
-    <div style="height: 100%;" ref="table">
-        <div style="text-align: left;padding: 10px;" ref="toolbar">
-            <el-button type="primary" @click="$router.push('/blog/edit')">新建</el-button>
-        </div>
-        <el-table
-                :data="list"
-                style="width: 100%;"
-                :max-height="maxHeight + 'px'"
-                border
-                >
-            <el-table-column
-                    fixed
-                    prop="id"
-                    label="id"
-                    width="150">
-            </el-table-column>
+  <div style="height: 100%;" >
+    <table-view :data="data" @current-changed="refreshData" @size-changed="refreshSize">
+      <template slot="tool-bar">
+        <el-button type="primary" @click="$router.push('/blog/edit')" size="medium">新建<i class="el-icon-plus el-icon--right"/></el-button>
+      </template>
+      <template slot="table-content">
+        <el-table-column
+                fixed
+                prop="id"
+                align="center"
+                label="id"
+                min-width="150">
+        </el-table-column>
 
-            <el-table-column
-                    prop="category.name"
-                    label="分类"
-                    width="150">
-            </el-table-column>
-            <el-table-column
-                    prop="content"
-                    label="内容"
-                    width="300"
-                    style="max-height: 200px"
-            >
-                <template slot-scope="scope" style="text-align: right">
-                   <span>{{scope.row.content.substr(0, 100)}}</span>
+        <el-table-column
+                prop="category.name"
+                align="center"
+                label="分类"
+                min-width="150">
+        </el-table-column>
 
-                </template>
-            </el-table-column>
-            <el-table-column
-                    prop="createDate"
-                    label="创建时间"
-                    width="150">
-            </el-table-column>
-            <el-table-column
-                    prop="updateDate"
-                    label="更新时间"
-                    width="150">
-            </el-table-column>
+        <el-table-column
+                align="center"
+                label="标签"
+                min-width="150">
+          <template slot-scope="scope">
+            <el-tag style="margin: 5px;" v-for="tag in scope.row.tags" :key="tag.id">{{tag.name}}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+                prop="content"
+                align="center"
+                label="内容"
+                min-width="300"
+                style="max-height: 200px"
+        >
+          <template slot-scope="scope">
+            <span>{{scope.row.content.substr(0, 100)}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+                prop="createDate"
+                align="center"
+                label="创建时间"
+                min-width="150">
+          <template slot-scope="scope">
+            {{formatDateString(scope.row.createDate)}}
+          </template>
+        </el-table-column>
+        <el-table-column
+                prop="updateDate"
+                align="center"
+                label="更新时间"
+                min-width="150">
+          <template slot-scope="scope">
+            {{formatDateString(scope.row.updateDate)}}
+          </template>
+        </el-table-column>
 
-            <el-table-column
-                    fixed="right"
-                    label="操作"
-                    width="100">
-                <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                    <el-button type="text" size="small">编辑</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-    </div>
+        <el-table-column
+                fixed="right"
+                align="center"
+                label="操作"
+                width="240">
+          <template slot-scope="scope">
+            <el-button type="primary" @click="handleClick(scope.row)" size="mini">查看</el-button>
+            <el-button type="warning" size="mini" >编辑</el-button>
+            <delete-button />
+          </template>
+        </el-table-column>
+      </template>
+    </table-view>
+  </div>
 </template>
 
 <script>
-    import ArticleAPI from "@/network/article_api";
+  import ArticleAPI from "@/network/article_api";
+  import TableView from "../../components/table/TableView";
+  import common from "@/network/common";
+  import DeleteButton from '@/components/button/DeleteButton';
 
-    export default {
-        name: "BlogArticle",
-        data() {
-            return {
-                list: [],
-                maxHeight: 2000
-            }
-        },
-        created() {
-            ArticleAPI.getArticleList(0, 20).then(res => {
-               console.log(res);
-               this.list = res.data;
-            });
-        },
-        mounted() {
-            this.maxHeight = this.$refs.table.offsetHeight - this.$refs.toolbar.offsetHeight;
-        }
+  export default {
+    name: "BlogArticle",
+    components: {
+      TableView,
+      DeleteButton
+    },
+    data() {
+      return {
+        data: common.paging,
+      }
+    },
+    created() {
+      this.getData();
+    },
+    methods: {
+      getData() {
+        ArticleAPI.getArticleList(this.data.currentPage, this.data.size).then(res => {
+          console.log(res);
+          this.data = res.data;
+        });
+      },
+      refreshData(page) {
+        page = page - 1;
+        ArticleAPI.getArticleList(page, this.data.size).then(res => {
+          console.log(res);
+          this.data = res.data;
+        });
+      },
+      refreshSize(size) {
+        this.data.size = size;
+        this.data.currentPage = 0;
+        this.getData();
+      },
+      formatDateString(date) {
+        return this.$utility.date.format( new Date(date));
+      }
     }
+  }
 </script>
 
 <style scoped>

@@ -9,18 +9,21 @@
         <el-table-column
                 fixed
                 label="分类ID"
+                align="center"
                 prop="id"
                 min-width="100">
         </el-table-column>
 
         <el-table-column
                 label="分类名称"
+                align="center"
                 prop="name"
                 min-width="150">
         </el-table-column>
         <el-table-column
                 label="创建日期"
                 prop="createDate"
+                align="center"
                 min-width="150">
           <template slot-scope="scope">
             {{dateToString(scope.row.createDate)}}
@@ -29,6 +32,7 @@
         <el-table-column
                 label="更新日期"
                 prop="updateDate"
+                align="center"
                 min-width="150">
           <template slot-scope="scope">
             {{dateToString(scope.row.updateDate)}}
@@ -38,9 +42,12 @@
         <el-table-column
                 fixed="right"
                 label="操作"
+                align="center"
                 width="150">
           <template slot-scope="scope" style="text-align: right">
-            <el-button slot="reference" type="primary" size="mini" class="operation-button" @click="editCategory(scope.row)">编辑</el-button>
+            <el-button slot="reference" type="primary" size="mini" class="operation-button"
+                       @click="editCategory(scope.row)">编辑
+            </el-button>
             <delete-button @onConfirm="deleteCategoryWithID(scope.row.id, scope.$index)" class="operation-button"/>
 
           </template>
@@ -48,8 +55,10 @@
       </template>
     </table-view>
 
-    <category-edit-view :data="addForm" :visible="createDialogFormVisible" @cancel="createDialogFormVisible = false" @save="addCategory" />
-    <category-edit-view :data="editForm" :visible="editDialogFormVisible" @cancel="editDialogFormVisible = false" @save="updateCategory" />
+    <category-edit-view :data="addForm" :visible="createDialogFormVisible" @cancel="createDialogFormVisible = false"
+                        @save="addCategory"/>
+    <category-edit-view :data="editForm" :visible="editDialogFormVisible" @cancel="editDialogFormVisible = false"
+                        @save="updateCategory"/>
 
   </div>
 </template>

@@ -63,15 +63,15 @@
     },
     created() {
       CategoryAPI.getCategoryList(0, 200).then(res => {
-        this.categories = res.data;
+        this.categories = res.data.data;
       });
 
       TagAPI.getTagList(0, 200).then(res => {
-        this.tags = res.data;
+        this.tags = res.data.data;
       });
 
       ImageAPI.getImageList(0, 200).then(res => {
-        this.images = res.data;
+        this.images = res.data.data;
       });
     },
     components: {
@@ -93,7 +93,7 @@
       uploadImage(image) {
         console.log('upload');
         ImageAPI.mkupload(image, null).then(res => {
-          this.mk.insertContent("![image]("+res.data.originalURL+")");
+          this.mk.insertContent("![image](" + res.data.originalURL + ")");
         })
       },
       markdownReady(mk) {

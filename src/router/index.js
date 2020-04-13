@@ -11,6 +11,7 @@ const BlogImage = () => import('@/views/blog/BlogImage');
 const Blog = () => import('@/views/blog/Blog');
 const Home = () => import('@/views/home/Home');
 const Test = () => import('@/views/Test');
+const blogArticlePreview = () => import('@/views/blog/BlogArticlePreview')
 
 let routes = [
   {
@@ -53,6 +54,11 @@ let routes = [
         path: 'image',
         component: BlogImage
       },
+      {
+        name: "文字预览",
+        path: 'preview',
+        component: blogArticlePreview
+      }
     ]
   },
   {

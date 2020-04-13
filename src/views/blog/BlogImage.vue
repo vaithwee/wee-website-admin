@@ -1,24 +1,24 @@
 <template>
-  <div style="height: 100%;" >
+  <div style="height: 100%;">
     <table-view :data="data" @current-changed="refreshData" @size-changed="refreshSize">
       <template slot="tool-bar">
         <el-button type="primary" size="medium" @click="createDialogFormVisible = true">上传 <i
-            class="el-icon-upload el-icon--right"/></el-button>
+                class="el-icon-upload el-icon--right"/></el-button>
       </template>
       <template slot="table-content">
         <el-table-column
-            prop="id"
-            label="id"
-            fixed
-            align="center"
-            width="100">
+                prop="id"
+                label="id"
+                fixed
+                align="center"
+                width="100">
         </el-table-column>
 
         <el-table-column
-            label="预览"
-            fixed
-            width="220"
-            align="center"
+                label="预览"
+                fixed
+                width="220"
+                align="center"
         >
           <template slot-scope="scope">
             <a :href="scope.row.originalURL" target="_blank">
@@ -28,92 +28,92 @@
         </el-table-column>
 
         <el-table-column
-            prop="originalName"
-            label="名称"
-            align="center"
-            min-width="180">
+                prop="originalName"
+                label="名称"
+                align="center"
+                min-width="180">
         </el-table-column>
 
         <el-table-column
-            prop="name"
-            label="自增名"
-            align="center"
-            min-width="360">
+                prop="name"
+                label="自增名"
+                align="center"
+                min-width="360">
         </el-table-column>
 
 
         <el-table-column
-            prop="key"
-            label="标识"
-            align="center"
-            min-width="360"
+                prop="key"
+                label="标识"
+                align="center"
+                min-width="360"
         >
         </el-table-column>
         <el-table-column
-            prop="contentType"
-            label="文件类型"
-            align="center"
-            min-width="100"
+                prop="contentType"
+                label="文件类型"
+                align="center"
+                min-width="100"
         >
         </el-table-column>
         <el-table-column
-            prop="length"
-            label="文件长度"
-            align="center"
-            min-width="100"
+                prop="length"
+                label="文件长度"
+                align="center"
+                min-width="100"
         >
         </el-table-column>
         <el-table-column
-            prop="width"
-            label="宽度"
-            align="center"
-            min-width="100"
+                prop="width"
+                label="宽度"
+                align="center"
+                min-width="100"
         >
         </el-table-column>
         <el-table-column
-            prop="height"
-            label="高度"
-            align="center"
-            min-width="100"
+                prop="height"
+                label="高度"
+                align="center"
+                min-width="100"
         >
         </el-table-column>
         <el-table-column
-            prop="server.text"
-            label="服务器"
-            align="center"
-            min-width="100"
+                prop="server.text"
+                label="服务器"
+                align="center"
+                min-width="100"
         >
         </el-table-column>
         <el-table-column
-            prop="bucket.text"
-            label="空间"
-            align="center"
-            min-width="100"
+                prop="bucket.text"
+                label="空间"
+                align="center"
+                min-width="100"
         >
         </el-table-column>
         <el-table-column
-            prop="type.text"
-            label="访问控制"
-            align="center"
-            min-width="100"
+                prop="type.text"
+                label="访问控制"
+                align="center"
+                min-width="100"
         >
         </el-table-column>
         <el-table-column
-            label="上传时间"
-            align="center"
-            min-width="200"
+                label="上传时间"
+                align="center"
+                min-width="200"
         >
           <template slot-scope="scope">
             <span>{{dateToString(scope.row.createDate)}}</span>
           </template>
         </el-table-column>
         <el-table-column
-            align="center"
-            label="操作"
-            fixed="right"
-            width="100">
+                align="center"
+                label="操作"
+                fixed="right"
+                width="150">
           <template slot-scope="scope">
-            <delete-button @onConfirm="deleteImage(scope.row.id)" />
+            <delete-button @onConfirm="deleteImage(scope.row.id)"/>
           </template>
         </el-table-column>
       </template>
@@ -130,7 +130,8 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="createDialogFormVisible = false" size="small">取 消</el-button>
-        <el-button type="primary" @click="uploadImage" :loading="loading" size="small">{{loading ? '上传中' : '确 定'}}</el-button>
+        <el-button type="primary" @click="uploadImage" :loading="loading" size="small">{{loading ? '上传中' : '确 定'}}
+        </el-button>
       </div>
     </el-dialog>
 
@@ -202,8 +203,8 @@
       },
       deleteImage(id) {
         ImageAPI.remove(id).then(res => {
-            this.getData();
-            this.$notify({title: '提示', message: '删除成功!', type: 'success'});
+          this.getData();
+          this.$notify({title: '提示', message: '删除成功!', type: 'success'});
 
         })
       },

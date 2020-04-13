@@ -4,7 +4,7 @@
       icon-color="red"
       @onConfirm="onConfirm"
   >
-    <el-button slot="reference" type="danger" size="mini">删除</el-button>
+    <el-button slot="reference" type="danger" size="mini" style="margin: 10px">删除</el-button>
   </el-popconfirm>
 </template>
 

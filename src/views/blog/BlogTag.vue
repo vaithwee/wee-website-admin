@@ -8,60 +8,60 @@
       </template>
       <template slot="table-content">
         <el-table-column
-            fixed
-            prop="id"
-            label="标签ID"
-            align="center"
-            min-width="100">
+                fixed
+                prop="id"
+                label="标签ID"
+                align="center"
+                min-width="100">
         </el-table-column>
 
         <el-table-column
-            prop="name"
-            label="标签名称"
-            align="center"
-            min-width="150">
+                prop="name"
+                label="标签名称"
+                align="center"
+                min-width="150">
         </el-table-column>
 
         <el-table-column
-            prop="type"
-            label="标签类型"
-            align="center"
-            min-width="150">
+                prop="type"
+                label="标签类型"
+                align="center"
+                min-width="150">
         </el-table-column>
 
         <el-table-column
-            prop="sort"
-            label="标签排序"
-            align="center"
-            min-width="150">
+                prop="sort"
+                label="标签排序"
+                align="center"
+                min-width="150">
         </el-table-column>
         <el-table-column
-            prop="createDate"
-            align="center"
-            label="创建日期"
-            min-width="150">
+                prop="createDate"
+                align="center"
+                label="创建日期"
+                min-width="150">
           <template slot-scope="scope">
             {{dateToString(scope.row.createDate)}}
           </template>
         </el-table-column>
         <el-table-column
-            prop="updateDate"
-            align="center"
-            label="更新日期"
-            min-width="150">
+                prop="updateDate"
+                align="center"
+                label="更新日期"
+                min-width="150">
           <template slot-scope="scope">
             {{dateToString(scope.row.updateDate)}}
           </template>
         </el-table-column>
 
         <el-table-column
-            fixed="right"
-            label="操作"
-            align="center"
-            min-width="100"
-            width="auto">
+                fixed="right"
+                label="操作"
+                align="center"
+                width="150">
           <template slot-scope="scope" style="text-align: right">
-            <el-button slot="reference" type="primary" size="mini" style="margin: 5px;" @click="editTag(scope.row)">编辑</el-button>
+            <el-button slot="reference" type="primary" size="mini" style="margin: 5px;" @click="editTag(scope.row)">编辑
+            </el-button>
             <delete-button @onConfirm="removeTag(scope.row.id, scope.$index)"/>
 
           </template>
@@ -70,8 +70,10 @@
     </table-view>
 
 
-    <tag-edit-view :data="addForm" :visible="createDialogFormVisible" @save="addTag" @cancel="createDialogFormVisible = false" />
-    <tag-edit-view :data="editForm" :visible="editDialogFormVisible" @save="updateTag" @cancel="editDialogFormVisible = false" />
+    <tag-edit-view :data="addForm" :visible="createDialogFormVisible" @save="addTag"
+                   @cancel="createDialogFormVisible = false"/>
+    <tag-edit-view :data="editForm" :visible="editDialogFormVisible" @save="updateTag"
+                   @cancel="editDialogFormVisible = false"/>
   </div>
 
 
