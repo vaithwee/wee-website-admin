@@ -53,15 +53,36 @@
           type: null,
           tags: [],
           content: '',
-          cover: null
+          cover: null,
+          id: undefined,
         },
         categories: [],
         tags: [],
         images: [],
         mk: null,
+        originalData:null,
       }
     },
     created() {
+
+      let id = this.$route.query.id;
+      if (id !== undefined) {
+        ArticleAPI.getArticleDetail(id).then(res => {
+          this.originalData = res.data;
+          this.form.id = id;
+          this.form.title = res.data.title;
+          this.form.content = res.data.content;
+          this.form.type = res.data.category.id;
+          let tags = res.data.tags;
+          if (tags.length > 0) {
+            for (let index = 0; index < tags.length; ++index) {
+              this.form.tags.push(tags[index].id);
+            }
+          }
+          this.form.cover = res.data.cover;
+        });
+      }
+
       CategoryAPI.getCategoryList(0, 200).then(res => {
         this.categories = res.data.data;
       });
@@ -80,9 +101,16 @@
     },
     methods: {
       postArticle() {
-        ArticleAPI.postArticle(this.form.title, this.form.content, this.form.tags, this.form.type, this.form.cover.id).then(res => {
-          console.log(res);
-        })
+        if (this.form.id !== undefined) {
+          ArticleAPI.updateArticle(this.form.id, this.form.title, this.form.content, this.form.tags, this.form.type, this.form.cover.id).then(res => {
+            console.log(res);
+          })
+        } else {
+          ArticleAPI.postArticle(this.form.title, this.form.content, this.form.tags, this.form.type, this.form.cover.id).then(res => {
+            console.log(res);
+          })
+        }
+
       },
       tagsChanged(item) {
         console.log(item);

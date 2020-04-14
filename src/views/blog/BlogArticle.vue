@@ -14,6 +14,13 @@
         </el-table-column>
 
         <el-table-column
+                prop="title"
+                align="center"
+                label="标题"
+                min-width="150">
+        </el-table-column>
+
+        <el-table-column
                 prop="category.name"
                 align="center"
                 label="分类"
@@ -65,8 +72,8 @@
                 width="240">
           <template slot-scope="scope">
             <el-button type="primary" @click="previewArticle(scope.row)" size="mini">查看</el-button>
-            <el-button type="warning" size="mini" >编辑</el-button>
-            <delete-button />
+            <el-button type="warning" @click="$router.push({path: '/blog/edit', query: {id: scope.row.id}})" size="mini" >编辑</el-button>
+            <delete-button @onConfirm="removeArticle(scope.row.id)" />
           </template>
         </el-table-column>
       </template>
@@ -119,6 +126,11 @@
       previewArticle(article) {
         console.log(article);
         this.$router.push('/blog/preview/' + article.id);
+      },
+      removeArticle(id) {
+        ArticleAPI.removeArticle(id).then(res => {
+          this.getData();
+        })
       }
     }
   }
