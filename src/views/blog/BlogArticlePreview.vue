@@ -5,19 +5,18 @@
       <el-tag style="margin: 5px" type="primary" v-for="tag in data.tags">{{tag.name}}</el-tag>
     </div>
 <!--    <el-image :src="data.cover.originalURL" fit="cover" style="width: 100%" />-->
-    <markdown-preview  :initialValue="data.content"   theme="light" style="width: 100%;height: 100%" />
+    <markdown   :initialValue="data.content"   theme="dark" style="width: 100%;height: 100%" />
   </div>
 </template>
 
 <script>
-  import {MarkdownPro, MarkdownPreview} from 'vue-meditor'
+  import markdown from "@/components/markdown/preview"
   import ArticleAPI from "../../network/article_api";
 
   export default {
     name: "BlogArticlePreview",
     components: {
-      MarkdownPro,
-      MarkdownPreview
+      markdown
     },
     data() {
       return {

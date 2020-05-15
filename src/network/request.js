@@ -9,7 +9,7 @@ import {Notification} from "element-ui";
 export function request(config) {
 
   let info = {
-    "en": 0,
+    "en": 1,
     "appid": 1,
     "timestamp": Date.parse(new Date()),
   };
@@ -59,7 +59,6 @@ export function request(config) {
     baseURL: 'http://localhost:9088',
     timeout: 60000,
     transformRequest: [function (data) {
-      console.log("解析器");
       if (data === undefined) {
         return data;
       }

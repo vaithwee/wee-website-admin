@@ -60,12 +60,6 @@
 
     },
     created() {
-
-      TestApi.login("wee", "123456").then(res => {
-        localStorage.setItem("token", res.data);
-        console.log(res);
-      });
-
       HomeAPI.getInfo().then(res => {
         this.info = res.data.info;
         this.homeInfoForm.greeting = this.info.greeting;
